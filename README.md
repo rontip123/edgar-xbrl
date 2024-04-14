@@ -1,5 +1,7 @@
 # street-smart-xbrl
 
+$ git clone https://github.com/azhar-zuberi/street-smart-xbrl.git 
+$ cd street-smart-xbrl 
 $ pip3 install py-xbrl  
 $ pip3 install pandas 
 
