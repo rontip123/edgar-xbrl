@@ -10,9 +10,6 @@ cache: HttpCache = HttpCache('./cache')
 cache.set_headers({'From': 'azhar.zuberi@street-smart.ai', 'User-Agent': 'py-xbrl/2.1.0'})
 parser = XbrlParser(cache)
 
-aapl_schema_url = "https://www.sec.gov/Archives/edgar/data/0000320193/000032019321000105/aapl-20210925.htm"
-aapl_output_json = "aapl-20210925.json"
-
 t_schema_url = "https://www.sec.gov/Archives/edgar/data/732717/000073271724000009/t-20231231.htm"
 t_output_json = "t-20231231.json"
 
