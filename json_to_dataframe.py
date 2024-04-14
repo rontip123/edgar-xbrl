@@ -2,7 +2,7 @@ import json
 import pandas as pd
 
 # Load JSON data from file
-json_file_path = './json/' + 'tmus-20231231.json'
+json_file_path = './json/' + 't-20231231.json'
 with open(json_file_path, 'r') as file:
     data = json.load(file)
 

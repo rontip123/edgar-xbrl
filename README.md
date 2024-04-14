@@ -4,7 +4,12 @@ $ pip3 install py-xbrl
 $ pip3 install pandas 
 
 Convert XBRL to JSON 
-1. set the schema_url param 
-2. set the output_json param 
-3. Execute the xbrl_to_json.py script
+1. set schema_url 
+2. set output_json 
+3. Execute xbrl_to_json.py 
 % python3 xbrl_to_json.py
+
+Generate Pandas Data Frame 
+1. set json_file_path 
+2. Execute json_to_dataframe.py 
+% python3 json_to_dataframe.py 
