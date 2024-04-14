@@ -26,7 +26,12 @@ vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/0000732712240000
 vz_output_json = "vz-20231231.json"
 
 schema_url = para_schema_url
-output_json = para_output_json
-inst: XbrlInstance = parser.parse_instance(schema_url)
+json_filename = schema_url.split("/")[-1:]
+json_filename = json_filename[0].split(".")[0]
+output_json = json_filename + ".json"
+#print(json_file)
 
+#output_json = para_output_json
+
+inst: XbrlInstance = parser.parse_instance(schema_url)
 inst.json('./json/' + output_json)

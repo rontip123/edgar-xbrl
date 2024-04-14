@@ -10,7 +10,7 @@ with open(json_file_path + json_file, 'r') as file:
 # Extracting data based on conditions
 filtered_data = []
 for key, value in data["facts"].items():
-    if value["dimensions"]["concept"] == "ProfitLoss" and \
+    if value["dimensions"]["concept"] == "LongTermDebtAndCapitalLeaseObligations" and \
        set(value["dimensions"].keys()) == {"unit", "concept", "entity", "period"}:
         filtered_data.append({
             "fact": key,
