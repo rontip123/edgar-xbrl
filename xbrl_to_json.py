@@ -25,7 +25,8 @@ vz_output_json = "vz-20231231.json"
 tmus_schema_url = "https://www.sec.gov/Archives/edgar/data/1283699/000128369924000008/tmus-20231231.htm"
 tmus_output_json = "tmus-20231231.json"
 
-schema_url = tmus_schema_url
+schema_url = t_schema_url
+output_json = t_output_json
 inst: XbrlInstance = parser.parse_instance(schema_url)
 
-inst.json('./json/' + tmus_output_json)
+inst.json('./json/' + output_json)
