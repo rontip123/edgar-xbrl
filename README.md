@@ -1,6 +1,6 @@
 # street-smart-xbrl
 
-$ pip3 install py-xbrl 
+$ pip3 install py-xbrl  
 $ pip3 install pandas 
 
 Convert XBRL to JSON 
