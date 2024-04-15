@@ -20,7 +20,9 @@ tmus_schema_url = "https://www.sec.gov/Archives/edgar/data/1283699/0001283699240
 
 vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/000073271224000010/vz-20231231.htm"
 
-schema_url = para_schema_url
+cmcsa_schema_url = "https://www.sec.gov/Archives/edgar/data/1166691/000116669124000011/cmcsa-20231231.htm"
+
+schema_url = cmcsa_schema_url
 json_filename = schema_url.split("/")[-1:]
 json_filename = json_filename[0].split(".")[0]
 output_json = json_filename + ".json"
