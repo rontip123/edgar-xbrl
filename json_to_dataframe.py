@@ -11,7 +11,6 @@ with open(json_file_path + json_file, 'r') as file:
 #xbrl_keys = ["DebtInstrumentCarryingAmount"]  
 xbrl_keys = ["RevenueFromContractWithCustomerExcludingAssessedTax",
              "ProfitLoss",
-             "NetIncomeLoss",
              "InterestExpense",
              "InterestIncomeOther"
              "IncomeTaxExpenseBenefit",
@@ -37,12 +36,7 @@ for xbrl_key in xbrl_keys:
     df_list.append(df)
 
 final_df = pd.concat(df_list, ignore_index=True)
-print(final_df)
-            #print(filtered_data)
-    #dataframes.append(df)
-
-# Concatenate all dataframes
-#final_df = pd.concat(dataframes, ignore_index=True)
+#print(final_df)
 
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
