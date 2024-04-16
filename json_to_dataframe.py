@@ -3,13 +3,23 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'para-20231231.json'
+json_file = 'para-20230930.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
 # Replace with your array of xbrl_keys
-#xbrl_keys = ["DebtInstrumentCarryingAmount"]  
-xbrl_keys = ["RevenueFromContractWithCustomerExcludingAssessedTax",
+#xbrl_keys = ["DebtInstrumentCarryingAmount"] 
+
+chtr_keys = ["Revenues",
+           "ProfitLoss",
+           "InterestIncomeExpenseNet",
+           "IncomeTaxExpenseBenefit",
+           "DepreciationAmortizationAndAccretionNet",
+           "NetCashProvidedByUsedInOperatingActivities",
+           "PaymentsToAcquirePropertyPlantAndEquipment",           
+        ]
+
+para_keys = ["RevenueFromContractWithCustomerExcludingAssessedTax",
              "ProfitLoss",
              "InterestExpense",
              "InterestIncomeOther"
@@ -18,6 +28,38 @@ xbrl_keys = ["RevenueFromContractWithCustomerExcludingAssessedTax",
              "PaymentsToAcquirePropertyPlantAndEquipment"
              ]
 
+t_keys = ["Revenues",
+           "ProfitLoss",
+           "InterestExpense",
+           "InterestIncomeOther",
+           "IncomeTaxExpenseBenefit",
+           "DepreciationDepletionAndAmortization",
+           "EarningsBeforeInterestTaxesDepreciationAndAmortization",
+           "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations",
+           "PaymentsToAcquireProductiveAssets"
+        ]
+
+tmus_keys = ["RevenueFromContractWithCustomerExcludingAssessedTax",
+           "NetIncomeLoss",
+           "InterestIncomeExpenseNonoperatingNet",
+           "IncomeTaxExpenseBenefit",
+           "DepreciationDepletionAndAmortization",
+           "NetCashProvidedByUsedInOperatingActivities",
+           "PaymentsToAcquirePropertyPlantAndEquipment",
+           "PaymentsToAcquireIntangibleAssets"
+        ]
+
+vz_keys = ["Revenues",
+           "ProfitLoss",
+           "InterestExpense",
+           "IncomeTaxExpenseBenefit",
+           "DepreciationAndAmortization",
+           "NetCashProvidedByUsedInOperatingActivities",
+           "PaymentsToAcquireOtherProductiveAssets",
+           "PaymentsToAcquireIntangibleAssets"
+        ]
+
+xbrl_keys = para_keys
 # Extracting data based on conditions
 # Create DataFrame for each xbrl_key
 dataframes = []
