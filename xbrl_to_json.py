@@ -7,7 +7,9 @@ from xbrl.instance import XbrlParser, XbrlInstance
 logging.basicConfig(level=logging.INFO)
 
 cache: HttpCache = HttpCache('./cache')
-cache.set_headers({'From': 'service@street-smart.ai', 'User-Agent': 'py-xbrl/2.1.0'})
+#cache.set_headers({'From': 'service@street-smart.ai', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:106.0) Gecko/20100101 Firefox/106.0'})
+cache.set_headers({'User-Agent': 'service@street-smart.ai'})
+
 parser = XbrlParser(cache)
 
 chtr_schema_url = "https://www.sec.gov/Archives/edgar/data/1091667/000109166724000028/chtr-20231231.htm"
@@ -22,7 +24,9 @@ vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/0000732712240000
 
 cmcsa_schema_url = "https://www.sec.gov/Archives/edgar/data/1166691/000116669124000011/cmcsa-20231231.htm"
 
-schema_url = cmcsa_schema_url
+dis_schema_url = "https://www.sec.gov/Archives/edgar/data/1744489/000174448923000216/dis-20230930.htm"
+
+schema_url = para_schema_url
 json_filename = schema_url.split("/")[-1:]
 json_filename = json_filename[0].split(".")[0]
 output_json = json_filename + ".json"
