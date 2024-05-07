@@ -146,15 +146,20 @@ for xbrl_key in xbrl_keys:
     for fact, item in data["facts"].items():
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
-            new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"]}
-            for key, value in dimensions.items():
-                if key not in ['unit', 'entity']:
-                    new_item[key] = value
-            filtered_data.append(new_item)
+            #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]), 
+            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": item["dimensions"]["period"]}
+            if len(dimensions.items()) == 4:
+                #print(fact, len(dimensions.items()))
+                for key, value in dimensions.items():
+                    #print(key, value)
+                    if key not in ['unit', 'entity', 'period']:
+                        new_item[key] = value
+                        filtered_data.append(new_item)
     df = pd.DataFrame(filtered_data)
     df_list.append(df)
 
-final_df = pd.concat(df_list, ignore_index=True)
+final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
+#final_df = final_df.drop_duplicates(subset=list(final_df.columns)[:-2])
 #print(final_df)
 
 # Write to CSV
