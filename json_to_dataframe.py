@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'para-20231231.json'
+json_file = 'cmcsa-20231231.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -50,6 +50,9 @@ taxonomy_mapping = {
         {"taxonomy_key" : "DebtCurrent", "label" : "Current Portion of long-term"},
         {"taxonomy_key" : "DebtInstrumentCarryingAmount","label" : "Commercial Paper"}
     ],
+    "dis": [
+        {"taxonomy_key" : "", "label" : ""},
+    ],
     "para": [
         {"taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax", "label" : "Revenue"},
         {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
@@ -94,7 +97,7 @@ taxonomy_mapping = {
     "tmus": [
         {"taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax", "label" : "Revenue"},
         {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
-        {"taxonomy_key" : "InterestIncomeExpenseNonoperatingNet", "label" : "TNet Interest Expense"},
+        {"taxonomy_key" : "InterestIncomeExpenseNonoperatingNet", "label" : "Net Interest Expense"},
         {"taxonomy_key" : "IncomeTaxExpenseBenefit", "label" : "Tax Expense"},
         {"taxonomy_key" : "DepreciationDepletionAndAmortization", "label" : "Depreciation & Amortization Expense (millions)"},
         {"taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities", "label" : "Net Cash Flow from Operating Activities (millions)"},
@@ -134,7 +137,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["para"]
+xbrl_keys = taxonomy_mapping["cmcsa"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
