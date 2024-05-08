@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'cmcsa-20231231.json'
+json_file = 't-20231231.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -137,7 +137,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["cmcsa"]
+xbrl_keys = taxonomy_mapping["t"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -149,8 +149,16 @@ for xbrl_key in xbrl_keys:
     for fact, item in data["facts"].items():
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
-            #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]), 
-            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": item["dimensions"]["period"]}
+            #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]),
+            date_range = item["dimensions"]["period"]            
+            if "/" in date_range:
+                date_range = date_range.split("/")[-1]
+
+            date_range = str(date_range)
+            #print(date_range)
+
+            #new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": item["dimensions"]["period"]}
+            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": date_range}
             if len(dimensions.items()) == 4:
                 #print(fact, len(dimensions.items()))
                 for key, value in dimensions.items():
@@ -161,9 +169,12 @@ for xbrl_key in xbrl_keys:
     df = pd.DataFrame(filtered_data)
     df_list.append(df)
 
+# transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
-#final_df = final_df.drop_duplicates(subset=list(final_df.columns)[:-2])
-#print(final_df)
+json_data = final_df.groupby('period').apply(lambda x: x.drop('period', axis=1).to_dict(orient='records')).to_dict()
+json_data = str(json_data).replace("'", '"')
+print(json_data)
+
 
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
