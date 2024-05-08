@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 't-20231231.json'
+json_file = 'para-20231231.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -137,7 +137,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["t"]
+xbrl_keys = taxonomy_mapping["para"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -172,10 +172,58 @@ for xbrl_key in xbrl_keys:
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('period').apply(lambda x: x.drop('period', axis=1).to_dict(orient='records')).to_dict()
-json_data = str(json_data).replace("'", '"')
-print(json_data)
+
+# Check and calculate Net Interest Expense for each period ending in 12-31
+for period in json_data.keys():
+    if period.endswith("12-31"):
+        if "Net Interest Expense" not in [item["label"] for item in json_data[period]]:
+            interest_expense = 0
+            interest_income = 0
+            for item in json_data[period]:
+                if item["label"] == "Interest Expense":
+                    interest_expense = item["value"]
+                    interest_expense_concept = item["concept"]
+                elif item["label"] == "Interest Income":
+                    interest_income = item["value"]
+                    interest_income_concept = item["concept"]
+            net_interest_expense = interest_expense + interest_income
+            net_interest_expense_concept = "calc: " + interest_expense_concept + "+" + interest_income_concept
+            json_data[period].append({"label": "Net Interest Expense", "value": net_interest_expense, "concept": net_interest_expense_concept})
+
+# Check and calculate EBITDA for each period ending in 12-31
+for period in json_data.keys():
+    if period.endswith("12-31"):
+        if "EBITDA" not in [item["label"] for item in json_data[period]]:
+            net_income = 0
+            interest_expense = 0
+            tax_expense = 0
+            depreciation_amortization_expense = 0
+            for item in json_data[period]:
+                if item["label"] == "Interest Expense":
+                    interest_expense = item["value"]
+                    interest_expense_concept = item["concept"]
+                elif item["label"] == "Net Income":
+                    net_income = item["value"]
+                    net_income_concept = item["concept"]
+                elif item["label"] == "Tax Expense":
+                    tax_expense = item["value"]
+                    tax_expense_concept = item["concept"]
+                elif item["label"] == "Depreciation & Amortization Expense (millions)":
+                    depreciation_amortization_expense = item["value"]
+                    depreciation_amortization_expense_concept = item["concept"]
+                
+            ebitda = interest_expense + net_income + tax_expense + depreciation_amortization_expense
+
+            ebitda_concept = "calc: " + net_income_concept + "+" + interest_expense_concept + "+" + tax_expense_concept + "+" + depreciation_amortization_expense_concept
+
+            json_data[period].append({"label": "EBITDA", "value": ebitda, "concept": ebitda_concept})
 
 
+# Write to sorted and calculate JSON
+processed_json = json_file.replace('.json', '-processed.json')
+with open(json_file_path+processed_json, 'w') as formatted_file: 
+    json.dump(json_data, formatted_file, indent=4)
+    
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
 final_df.to_csv(json_file_path+csv_file, index=False)
