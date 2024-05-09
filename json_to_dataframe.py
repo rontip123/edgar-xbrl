@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'para-20231231.json'
+json_file = 'wbd-20231231.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -59,7 +59,7 @@ taxonomy_mapping = {
         {"taxonomy_key" : "InterestExpense", "label" : "Interest Expense"},
         {"taxonomy_key" : "InterestIncomeOther", "label" : "Interest Income"},
         {"taxonomy_key" : "IncomeTaxExpenseBenefit", "label" : "Tax Expense"},
-        {"taxonomy_key" : "DepreciationAndAmortization", "label" : "Depreciation & Amortization Expense (millions)"},
+        {"taxonomy_key" : "DepreciationAndAmortization", "label" : "Depreciation & Amortization Expense"},
         {"taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment", "label" : "Capital Expenditure On Tangible Assets"},
         {"taxonomy_key" : "DebtAndCapitalLeaseObligations", "label" : "Debt"},
         {"taxonomy_key" : "DebtAndCapitalLeaseObligations-FIXME", "label" : "Long-term (net of current portion)"},
@@ -99,7 +99,7 @@ taxonomy_mapping = {
         {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
         {"taxonomy_key" : "InterestIncomeExpenseNonoperatingNet", "label" : "Net Interest Expense"},
         {"taxonomy_key" : "IncomeTaxExpenseBenefit", "label" : "Tax Expense"},
-        {"taxonomy_key" : "DepreciationDepletionAndAmortization", "label" : "Depreciation & Amortization Expense (millions)"},
+        {"taxonomy_key" : "DepreciationDepletionAndAmortization", "label" : "Depreciation & Amortization Expense"},
         {"taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities", "label" : "Net Cash Flow from Operating Activities (millions)"},
         {"taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment", "label" : "Capital Expenditure On Tangible Assets"},
         {"taxonomy_key" : "PaymentsToAcquireIntangibleAssets", "label" : "Capital Expenditure On Intangible Assets"},
@@ -113,7 +113,7 @@ taxonomy_mapping = {
         {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
         {"taxonomy_key" : "InterestExpense", "label" : "Interest Expense"},
         {"taxonomy_key" : "IncomeTaxExpenseBenefit", "label" : "Tax Expense"},
-        {"taxonomy_key" : "DepreciationAndAmortization", "label" : "Depreciation & Amortization Expense (millions)"},
+        {"taxonomy_key" : "DepreciationAndAmortization", "label" : "Depreciation & Amortization Expense"},
         {"taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities", "label" : "Net Cash Flow from Operating Activities (millions)"},
         {"taxonomy_key" : "PaymentsToAcquireOtherProductiveAssets", "label" : "Capital Expenditure On Tangible Assets"},
         {"taxonomy_key" : "PaymentsToAcquireIntangibleAssets", "label" : "Capital Expenditure On Intangible Assets"},
@@ -127,7 +127,7 @@ taxonomy_mapping = {
         {"taxonomy_key" : "NetIncomeLoss","label" : "Net Income"},
         {"taxonomy_key" : "InterestExpense","label" : "Net Interest Expense"},
         {"taxonomy_key" : "IncomeTaxExpenseBenefit","label" : "Tax Expense"},
-        {"taxonomy_key" : "DepreciationAndAmortization","label" : "Depreciation & Amortization Expense (millions)"},
+        {"taxonomy_key" : "DepreciationAndAmortization","label" : "Depreciation & Amortization Expense"},
         {"taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities","label" : "Net Cash Flow from Operating Activities (millions)"},
         {"taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment","label" : "Capital Expenditure On Tangible Assets"},
         {"taxonomy_key" : "LongTermDebt","label" : "Debt"},
@@ -137,7 +137,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["para"]
+xbrl_keys = taxonomy_mapping["wbd"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -187,7 +187,7 @@ for period in json_data.keys():
                     interest_income = item["value"]
                     interest_income_concept = item["concept"]
             net_interest_expense = interest_expense + interest_income
-            net_interest_expense_concept = "calc: " + interest_expense_concept + "+" + interest_income_concept
+            net_interest_expense_concept = "calc: Interest Expense + Interest Income"
             json_data[period].append({"label": "Net Interest Expense", "value": net_interest_expense, "concept": net_interest_expense_concept})
 
 # Check and calculate EBITDA for each period ending in 12-31
@@ -208,15 +208,16 @@ for period in json_data.keys():
                 elif item["label"] == "Tax Expense":
                     tax_expense = item["value"]
                     tax_expense_concept = item["concept"]
-                elif item["label"] == "Depreciation & Amortization Expense (millions)":
+                elif item["label"] == "Depreciation & Amortization Expense":
                     depreciation_amortization_expense = item["value"]
                     depreciation_amortization_expense_concept = item["concept"]
                 
             ebitda = interest_expense + net_income + tax_expense + depreciation_amortization_expense
-
-            ebitda_concept = "calc: " + net_income_concept + "+" + interest_expense_concept + "+" + tax_expense_concept + "+" + depreciation_amortization_expense_concept
+            
+            ebitda_concept = "calc: Net Income + Interest Expense + Tax Expense + Depreciation & Amortization Expense"
 
             json_data[period].append({"label": "EBITDA", "value": ebitda, "concept": ebitda_concept})
+            
 
 # Check and calculate EBITDA Margin for each period ending in 12-31
 for period in json_data.keys():
@@ -234,7 +235,8 @@ for period in json_data.keys():
                 
             ebitda_margin = (ebitda / revenue) * 100
 
-            ebitda_margin_concept = "calc: " + ebitda_concept + "/" + revenue_concept
+            #ebitda_margin_concept = "calc: " + ebitda_concept + "/" + revenue_concept
+            ebitda_margin_concept = "calc: EBITDA / Revenue * 100"
 
             json_data[period].append({"label": "EBITDA Margin", "value": ebitda_margin, "concept": ebitda_margin_concept})
 
