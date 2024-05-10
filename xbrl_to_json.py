@@ -38,3 +38,6 @@ output_json = json_filename + ".json"
 
 inst: XbrlInstance = parser.parse_instance(schema_url)
 inst.json('./json/' + output_json)
+
+# get DocumentPeriodEndDate from json and append to end of filename
+# then send it to json_to_dataframe via SQS

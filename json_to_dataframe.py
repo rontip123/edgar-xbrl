@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'wbd-20231231.json'
+json_file = 'dis-20230930.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -51,7 +51,14 @@ taxonomy_mapping = {
         {"taxonomy_key" : "DebtInstrumentCarryingAmount","label" : "Commercial Paper"}
     ],
     "dis": [
-        {"taxonomy_key" : "", "label" : ""},
+        {"taxonomy_key" : "Revenues", "label" : "Revenue"},
+        {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
+        {"taxonomy_key" : "InterestIncomeExpenseNonoperatingNet", "label" : "Net Interest Expense"},
+        {"taxonomy_key" : "IncomeTaxExpenseBenefit", "label" : "Tax Expense "},
+        {"taxonomy_key" : "DepreciationDepletionAndAmortization", "label" : "Depreciation & Amortization Expense"},
+        {"taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities", "label" : "Net Cash Flow from Operating Activities"},
+        {"taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment", "label" : "Capital Expenditure On Tangible Assets"},
+        {"taxonomy_key" : "LongTermDebtNoncurrent", "label" : "Long-term (net of current portion)"},
     ],
     "para": [
         {"taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax", "label" : "Revenue"},
@@ -137,7 +144,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["wbd"]
+xbrl_keys = taxonomy_mapping["dis"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -199,9 +206,9 @@ for period in json_data.keys():
             tax_expense = 0
             depreciation_amortization_expense = 0
             for item in json_data[period]:
-                if item["label"] == "Interest Expense":
-                    interest_expense = item["value"]
-                    interest_expense_concept = item["concept"]
+                if item["label"] == "Net Interest Expense":
+                    net_interest_expense = item["value"]
+                    net_interest_expense_concept = item["concept"]
                 elif item["label"] == "Net Income":
                     net_income = item["value"]
                     net_income_concept = item["concept"]
@@ -212,7 +219,7 @@ for period in json_data.keys():
                     depreciation_amortization_expense = item["value"]
                     depreciation_amortization_expense_concept = item["concept"]
                 
-            ebitda = interest_expense + net_income + tax_expense + depreciation_amortization_expense
+            ebitda = net_interest_expense + net_income + tax_expense + depreciation_amortization_expense
             
             ebitda_concept = "calc: Net Income + Interest Expense + Tax Expense + Depreciation & Amortization Expense"
 
