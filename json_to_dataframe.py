@@ -1,14 +1,6 @@
 import json
 import pandas as pd
-
-# Load JSON data from file
-json_file_path = './json/'
-json_file = 't-20231231.json'
-with open(json_file_path + json_file, 'r') as file:
-    data = json.load(file)
-
-# Replace with your array of xbrl_keys
-#xbrl_keys = ["DebtInstrumentCarryingAmount"] 
+from datetime import datetime
 
 taxonomy_mapping = {
     "amcx": [
@@ -143,8 +135,60 @@ taxonomy_mapping = {
     ]
 }
 
+xbrl_keys = taxonomy_mapping["tmus"]
+# Load JSON data from file
+json_file_path = './json/'
+json_file = 'tmus-20231231.json'
+with open(json_file_path + json_file, 'r') as file:
+    data = json.load(file)
 
-xbrl_keys = taxonomy_mapping["t"]
+
+'''
+  "f2615": {
+            "value": "10-K",
+            "dimensions": {
+                "concept": "DocumentType",
+                "entity": "0001744489",
+                "period": "2022-10-02/2023-09-30"
+            }
+        },
+'''
+doc_type = None
+#for key, value in data.items():
+for key, value in data["facts"].items():
+    if value.get("dimensions", {}).get("concept") == "DocumentType":
+        doc_type = value.get("value")
+        break
+
+print('doc_type', doc_type)
+
+'''        "f2617": {
+            "value": "2023-09-30",
+            "dimensions": {
+                "concept": "DocumentPeriodEndDate",
+                "entity": "0001744489",
+                "period": "2022-10-02/2023-09-30"
+            }
+        },
+'''
+doc_period = None
+for key, value in data["facts"].items():
+    if value.get("dimensions", {}).get("concept") == "DocumentPeriodEndDate":
+        doc_period = value.get("dimensions", {}).get("period")
+        break
+period_parts = doc_period.split("/")
+period_start = period_parts[0]
+period_end = period_parts[1]
+#print(period_start, period_end)
+
+# get the fiscal year start and end from the document period
+period_start_date = datetime.strptime(period_start, "%Y-%m-%d")
+fy_start = period_start_date.strftime("%m-%d")
+
+period_end_date = datetime.strptime(period_end, "%Y-%m-%d")
+fy_end = period_end_date.strftime("%m-%d")
+
+print("fiscal year", fy_start, fy_end)
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -156,6 +200,33 @@ for xbrl_key in xbrl_keys:
     for fact, item in data["facts"].items():
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
+            if len(dimensions.items()) == 4:
+                for key, value in dimensions.items():
+                    dimension_period = item["dimensions"]["period"]
+                    new_item = None
+
+                    if "/" in dimension_period:
+                        dimension_period_parts = dimension_period.split("/")
+                        dimension_period_start = dimension_period_parts[0]
+                        dimension_period_end = dimension_period_parts[1]
+                        if (dimension_period_start.endswith(fy_start) and dimension_period_end.endswith(fy_end)):
+                            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": dimension_period_end}
+                        else:
+                            continue
+                    else:
+                        new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": dimension_period}
+                    
+                    filtered_data.append(new_item)
+                    '''
+                    if key not in ['unit', 'entity', 'period']:
+                        new_item[key] = value
+                        filtered_data.append(new_item)
+                    '''
+            df = pd.DataFrame(filtered_data)
+            df_list.append(df)
+
+
+            '''
             #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]),
             date_range = item["dimensions"]["period"] 
             date_end = date_range
@@ -184,12 +255,12 @@ for xbrl_key in xbrl_keys:
                             filtered_data.append(new_item)
                 df = pd.DataFrame(filtered_data)
                 df_list.append(df)
-
+            '''
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('period').apply(lambda x: x.drop('period', axis=1).to_dict(orient='records')).to_dict()
 
-
+'''
 # Check and calculate Net Interest Expense for each period ending in 12-31
 for period in json_data.keys():
     if period.endswith("12-31"):
@@ -206,6 +277,7 @@ for period in json_data.keys():
             net_interest_expense = interest_expense + interest_income
             net_interest_expense_concept = "calc: Interest Expense + Interest Income"
             json_data[period].append({"label": "Net Interest Expense", "value": net_interest_expense, "concept": net_interest_expense_concept})
+'''
 
 '''
 # Check and calculate EBITDA for each period ending in 12-31
