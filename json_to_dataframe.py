@@ -3,7 +3,7 @@ import pandas as pd
 
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'dis-20230930.json'
+json_file = 't-20231231.json'
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -144,7 +144,7 @@ taxonomy_mapping = {
 }
 
 
-xbrl_keys = taxonomy_mapping["dis"]
+xbrl_keys = taxonomy_mapping["t"]
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -157,28 +157,38 @@ for xbrl_key in xbrl_keys:
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
             #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]),
-            date_range = item["dimensions"]["period"]            
+            date_range = item["dimensions"]["period"] 
+            date_end = date_range
+            date_start = None
             if "/" in date_range:
-                date_range = date_range.split("/")[-1]
+                date_parts = date_range.split("/")
+                date_start = date_parts[0]
+                date_end = date_parts[1]
+                #print(item["dimensions"]["concept"], item["value"], date_start, date_end)
 
-            date_range = str(date_range)
+                #date_range = date_range.split("/")[-1]
+
+            #date_range = str(date_range)            
             #print(date_range)
-
+            date_end = str(date_end)
+            if date_start is not None:
+                date_start = str(date_start)
+            
             #new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": item["dimensions"]["period"]}
-            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": date_range}
-            if len(dimensions.items()) == 4:
-                #print(fact, len(dimensions.items()))
-                for key, value in dimensions.items():
-                    #print(key, value)
-                    if key not in ['unit', 'entity', 'period']:
-                        new_item[key] = value
-                        filtered_data.append(new_item)
-    df = pd.DataFrame(filtered_data)
-    df_list.append(df)
+            if date_end.endswith('12-31') and (date_start is None or date_start.endswith('01-01')):
+                new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": date_end}
+                if len(dimensions.items()) == 4:
+                    for key, value in dimensions.items():
+                        if key not in ['unit', 'entity', 'period']:
+                            new_item[key] = value
+                            filtered_data.append(new_item)
+                df = pd.DataFrame(filtered_data)
+                df_list.append(df)
 
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('period').apply(lambda x: x.drop('period', axis=1).to_dict(orient='records')).to_dict()
+
 
 # Check and calculate Net Interest Expense for each period ending in 12-31
 for period in json_data.keys():
@@ -197,6 +207,7 @@ for period in json_data.keys():
             net_interest_expense_concept = "calc: Interest Expense + Interest Income"
             json_data[period].append({"label": "Net Interest Expense", "value": net_interest_expense, "concept": net_interest_expense_concept})
 
+'''
 # Check and calculate EBITDA for each period ending in 12-31
 for period in json_data.keys():
     if period.endswith("12-31"):
@@ -224,8 +235,9 @@ for period in json_data.keys():
             ebitda_concept = "calc: Net Income + Interest Expense + Tax Expense + Depreciation & Amortization Expense"
 
             json_data[period].append({"label": "EBITDA", "value": ebitda, "concept": ebitda_concept})
-            
+'''            
 
+'''
 # Check and calculate EBITDA Margin for each period ending in 12-31
 for period in json_data.keys():
     if period.endswith("12-31"):
@@ -246,7 +258,7 @@ for period in json_data.keys():
             ebitda_margin_concept = "calc: EBITDA / Revenue * 100"
 
             json_data[period].append({"label": "EBITDA Margin", "value": ebitda_margin, "concept": ebitda_margin_concept})
-
+'''
 
 # Write to sorted and calculate JSON
 processed_json = json_file.replace('.json', '-processed.json')
