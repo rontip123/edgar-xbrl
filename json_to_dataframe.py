@@ -1,6 +1,7 @@
 import json
 import pandas as pd
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 taxonomy_mapping = {
     "amcx": [
@@ -135,10 +136,13 @@ taxonomy_mapping = {
     ]
 }
 
-xbrl_keys = taxonomy_mapping["tmus"]
+xbrl_keys = taxonomy_mapping["dis"]
 # Load JSON data from file
 json_file_path = './json/'
-json_file = 'tmus-20231231.json'
+#json_file = 't-20231231.json'
+json_file = 'dis-20230930.json'
+
+
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
 
@@ -182,13 +186,13 @@ period_end = period_parts[1]
 #print(period_start, period_end)
 
 # get the fiscal year start and end from the document period
-period_start_date = datetime.strptime(period_start, "%Y-%m-%d")
-fy_start = period_start_date.strftime("%m-%d")
+fy_start_date = datetime.strptime(period_start, "%Y-%m-%d")
+fy_start = fy_start_date.strftime("%m-%d")
 
-period_end_date = datetime.strptime(period_end, "%Y-%m-%d")
-fy_end = period_end_date.strftime("%m-%d")
+fy_end_date = datetime.strptime(period_end, "%Y-%m-%d")
+fy_end = fy_end_date.strftime("%m-%d")
 
-print("fiscal year", fy_start, fy_end)
+print("fiscal year", fy_start_date, fy_end_date)
 
 #xbrl_keys = para_keys
 # Extracting data based on conditions
@@ -201,6 +205,7 @@ for xbrl_key in xbrl_keys:
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
             if len(dimensions.items()) == 4:
+            #if (True):
                 for key, value in dimensions.items():
                     dimension_period = item["dimensions"]["period"]
                     new_item = None
@@ -209,12 +214,23 @@ for xbrl_key in xbrl_keys:
                         dimension_period_parts = dimension_period.split("/")
                         dimension_period_start = dimension_period_parts[0]
                         dimension_period_end = dimension_period_parts[1]
-                        if (dimension_period_start.endswith(fy_start) and dimension_period_end.endswith(fy_end)):
-                            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": dimension_period_end}
+                    
+                        # Assuming dimension_period_start and dimension_period_end are in the format "%Y-%m-%d"
+                        start_date = datetime.strptime(dimension_period_start, "%Y-%m-%d")
+                        end_date = datetime.strptime(dimension_period_end, "%Y-%m-%d")
+
+                        # Calculate the difference in months
+                        months_diff = relativedelta(end_date, start_date).months
+                        #print("Number of months between the two dates:", months_diff)
+
+                        #if ((months_diff == 11) and dimension_period_start.endswith(fy_start) and dimension_period_end.endswith(fy_end)):
+                        if (months_diff == 11):
+                            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                         else:
                             continue
                     else:
-                        new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": dimension_period}
+                        dimension_year = datetime.strptime(dimension_period, "%Y-%m-%d").year
+                        new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
                     
                     filtered_data.append(new_item)
                     '''
@@ -258,7 +274,7 @@ for xbrl_key in xbrl_keys:
             '''
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
-json_data = final_df.groupby('period').apply(lambda x: x.drop('period', axis=1).to_dict(orient='records')).to_dict()
+json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
 
 '''
 # Check and calculate Net Interest Expense for each period ending in 12-31
