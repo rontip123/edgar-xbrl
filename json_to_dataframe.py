@@ -319,7 +319,48 @@ for next_key in xbrl_keys:
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
+#print(json_data)
+for year in json_data.keys():
+    net_interest_expense = None
+    #net_interest_expense = json_data[year]['net_interest_expense']
+    #print(net_interest_expense)    
 
+    #"net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : 
+    # "calc:{interest_expense+interest_income}"}
+    interest_expense = None
+    interest_income = None
+    net_interest_expense = None
+    for year_data in json_data[year]:
+        if year_data['fact'] == 'interest_expense':
+            interest_expense = year_data['value']
+        if year_data['fact'] == 'interest_income':
+            interest_income= year_data['value']
+        if year_data['fact'] == 'net_interest_expense':
+            net_interest_expense = year_data['value']
+    
+    if net_interest_expense is None:
+        net_interest_expense = interest_expense + interest_income
+        new_item = {"fact" : 'net_interest_expense', "label": "Net Interest Expense", "value": int(net_interest_expense), "concept": "calc:{interest_expense+interest_income}", "year" : year, "reported_period": ""}
+        json_data[year].append(new_item)
+    
+    #df = pd.DataFrame.from_dict(json_data[year], orient='columns')
+    #print(df)
+
+    print(json_data[year])
+
+    '''
+    if not('net_interest_expense' in json_data[year]):
+        net_interest_expense = 0
+
+    '''
+    '''
+    #net_interest_expense = year_data['net_interest_expense']
+    #print(net_interest_expense)
+    if year_data['fact'] == 'net_interest_expense':
+        net_interest_expense = year_data['value']
+        print(net_interest_expense)
+    '''
+    
 '''
 # Check and calculate Net Interest Expense for each period ending in 12-31
 for period in json_data.keys():
@@ -397,6 +438,13 @@ processed_json = json_file.replace('.json', '-processed.json')
 with open(json_file_path+processed_json, 'w') as formatted_file: 
     json.dump(json_data, formatted_file, indent=4)
     
+# Convert JSON to DataFrame
+#final_df = pd.DataFrame([item for year in json_data.values() for item in year])
+#final_df = df.rename(columns={'label': 'Metric', 'value': 'Value', 'concept': 'Concept'})
+#final_df = pd.concat({k: pd.DataFrame(v) for k, v in json_data.items()}, names=['Year']).reset_index(level=1, drop=True).reset_index()
+final_df = pd.concat({k: pd.DataFrame(v) for k, v in json_data.items()}).reset_index(level=1, drop=True).reset_index()
+
+
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
 final_df.to_csv(json_file_path+csv_file, index=False)
