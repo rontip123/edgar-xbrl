@@ -70,14 +70,14 @@ taxonomy_mapping = {
     }    
 }
 
-ticker = "para"
+ticker = "dis"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
 
 #json_file = 'chtr-20231231.json'
-#json_file = 'dis-20230930.json'
-json_file = 'para-20231231.json'
+json_file = 'dis-20230930.json'
+#json_file = 'para-20231231.json'
 #json_file = 't-20231231.json'
 #json_file = 'tmus-20231231.json'
 #json_file = 'vz-20231231.json'
