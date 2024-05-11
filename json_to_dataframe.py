@@ -3,7 +3,37 @@ import pandas as pd
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+taxonomy_mapping_tmpl = {
+    "ticker": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : ""},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : ""},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : ""},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : ""},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : ""},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : ""},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : ""},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    }
+}
+
 taxonomy_mapping = {
+    "para": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InterestIncomeOther"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+    }
+}
+
+taxonomy_mapping_old = {
     "amcx": [
         {"taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax","label" : "Revenue"},
         {"taxonomy_key" : "NetIncomeLoss", "label" : "Net Income"},
@@ -136,16 +166,19 @@ taxonomy_mapping = {
     ]
 }
 
-xbrl_keys = taxonomy_mapping["dis"]
+xbrl_keys = taxonomy_mapping["para"]
 # Load JSON data from file
 json_file_path = './json/'
+
+#json_file = 'chtr-20231231.json'
+#json_file = 'dis-20230930.json'
+json_file = 'para-20231231.json'
 #json_file = 't-20231231.json'
-json_file = 'dis-20230930.json'
+#json_file = 'vz-20231231.json'
 
 
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
-
 
 '''
   "f2615": {
@@ -157,8 +190,8 @@ with open(json_file_path + json_file, 'r') as file:
             }
         },
 '''
+# get the document type
 doc_type = None
-#for key, value in data.items():
 for key, value in data["facts"].items():
     if value.get("dimensions", {}).get("concept") == "DocumentType":
         doc_type = value.get("value")
@@ -175,6 +208,7 @@ print('doc_type', doc_type)
             }
         },
 '''
+# get the document period
 doc_period = None
 for key, value in data["facts"].items():
     if value.get("dimensions", {}).get("concept") == "DocumentPeriodEndDate":
@@ -199,9 +233,11 @@ print("fiscal year", fy_start_date, fy_end_date)
 # Create DataFrame for each xbrl_key
 dataframes = []
 df_list = []
-for xbrl_key in xbrl_keys:    
+for next_key in xbrl_keys:    
     filtered_data = []
     for fact, item in data["facts"].items():
+        #if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
+        xbrl_key = xbrl_keys[next_key]
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
             if len(dimensions.items()) == 4:
@@ -240,38 +276,7 @@ for xbrl_key in xbrl_keys:
                     '''
             df = pd.DataFrame(filtered_data)
             df_list.append(df)
-
-
-            '''
-            #new_item = {"fact": fact, "label": xbrl_key["label"], "value": int(item["value"]),
-            date_range = item["dimensions"]["period"] 
-            date_end = date_range
-            date_start = None
-            if "/" in date_range:
-                date_parts = date_range.split("/")
-                date_start = date_parts[0]
-                date_end = date_parts[1]
-                #print(item["dimensions"]["concept"], item["value"], date_start, date_end)
-
-                #date_range = date_range.split("/")[-1]
-
-            #date_range = str(date_range)            
-            #print(date_range)
-            date_end = str(date_end)
-            if date_start is not None:
-                date_start = str(date_start)
-            
-            #new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": item["dimensions"]["period"]}
-            if date_end.endswith('12-31') and (date_start is None or date_start.endswith('01-01')):
-                new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "period": date_end}
-                if len(dimensions.items()) == 4:
-                    for key, value in dimensions.items():
-                        if key not in ['unit', 'entity', 'period']:
-                            new_item[key] = value
-                            filtered_data.append(new_item)
-                df = pd.DataFrame(filtered_data)
-                df_list.append(df)
-            '''
+                        
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
