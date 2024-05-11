@@ -9,17 +9,17 @@ taxonomy_mapping_tmpl = {
         "net_income" : {"label" : "Net Income", "taxonomy_key" : ""},
         "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
         "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
-        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
         "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : ""},
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : ""},
-        "ebitda": {"label" : "EBITDA", "taxonomy_key" : ""},
-        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : ""},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
         "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
     }
 }
 
-taxonomy_mapping = {
+taxonomy_mapping = {   
     "para": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
@@ -30,7 +30,44 @@ taxonomy_mapping = {
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
-    }
+    }, 
+    "dis": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "InterestIncomeExpenseNonoperatingNet"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},        
+    },
+    "t": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "ProfitLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InterestIncomeOther"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    },
+    "tmus": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "InterestIncomeExpenseNonoperatingNet"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    }    
 }
 
 taxonomy_mapping_old = {
@@ -166,14 +203,16 @@ taxonomy_mapping_old = {
     ]
 }
 
-xbrl_keys = taxonomy_mapping["para"]
+ticker = "tmus"
+xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
 
 #json_file = 'chtr-20231231.json'
 #json_file = 'dis-20230930.json'
-json_file = 'para-20231231.json'
+#json_file = 'para-20231231.json'
 #json_file = 't-20231231.json'
+json_file = 'tmus-20231231.json'
 #json_file = 'vz-20231231.json'
 
 
@@ -261,12 +300,12 @@ for next_key in xbrl_keys:
 
                         #if ((months_diff == 11) and dimension_period_start.endswith(fy_start) and dimension_period_end.endswith(fy_end)):
                         if (months_diff == 11):
-                            new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
+                            new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                         else:
                             continue
                     else:
                         dimension_year = datetime.strptime(dimension_period, "%Y-%m-%d").year
-                        new_item = {"label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
+                        new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
                     
                     filtered_data.append(new_item)
                     '''
