@@ -70,18 +70,20 @@ taxonomy_mapping = {
     }    
 }
 
-ticker = "tmus"
+ticker = "dis"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
 
-#json_file = 'chtr-20231231.json'
-#json_file = 'dis-20230930.json'
-#json_file = 'para-20231231.json'
-#json_file = 't-20231231.json'
-json_file = 'tmus-20231231.json'
-#json_file = 'vz-20231231.json'
-
+json_files = {
+    "chtr": "chtr-20231231.json",
+    "dis": "dis-20230930.json",
+    "para": "para-20231231.json",
+    "t": "t-20231231.json",
+    "tmus": "tmus-20231231.json",
+    "vz": "vz-20231231.json"
+}
+json_file = json_files[ticker]
 
 with open(json_file_path + json_file, 'r') as file:
     data = json.load(file)
@@ -205,7 +207,7 @@ for year in json_data.keys():
         if year_data['fact'] == 'ebitda':
             ebitda = year_data['value']
     
-    if ebitda is None:
+    if ebitda is None and net_income is not None and interest_expense is not None and tax_expense is not None and depreciation_amortization_expense is not None:
         ebitda = net_income + interest_expense + tax_expense + depreciation_amortization_expense
         new_item = {"fact" : 'ebitda', "label": "EBITDA", "value": int(ebitda), "concept": "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
@@ -227,7 +229,7 @@ for year in json_data.keys():
         if year_data['fact'] == 'revenue':
             revenue= year_data['value']
        
-    if ebitda_margin is None:
+    if ebitda_margin is None and ebitda is not None and revenue is not None:
         ebitda_margin = (ebitda / revenue) * 100
         new_item = {"fact" : 'ebitda_margin', "label": "EBITDA Margin", "value": ebitda_margin, "concept": "calc:{(ebitda/revenue)*100}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
