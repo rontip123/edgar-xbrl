@@ -203,7 +203,7 @@ taxonomy_mapping_old = {
     ]
 }
 
-ticker = "tmus"
+ticker = "t"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -211,8 +211,8 @@ json_file_path = './json/'
 #json_file = 'chtr-20231231.json'
 #json_file = 'dis-20230930.json'
 #json_file = 'para-20231231.json'
-#json_file = 't-20231231.json'
-json_file = 'tmus-20231231.json'
+json_file = 't-20231231.json'
+#json_file = 'tmus-20231231.json'
 #json_file = 'vz-20231231.json'
 
 
@@ -287,18 +287,12 @@ for next_key in xbrl_keys:
 
                     if "/" in dimension_period:
                         dimension_period_parts = dimension_period.split("/")
-                        dimension_period_start = dimension_period_parts[0]
-                        dimension_period_end = dimension_period_parts[1]
                     
                         # Assuming dimension_period_start and dimension_period_end are in the format "%Y-%m-%d"
-                        start_date = datetime.strptime(dimension_period_start, "%Y-%m-%d")
-                        end_date = datetime.strptime(dimension_period_end, "%Y-%m-%d")
-
-                        # Calculate the difference in months
+                        start_date = datetime.strptime(dimension_period_parts[0], "%Y-%m-%d")
+                        end_date = datetime.strptime(dimension_period_parts[1], "%Y-%m-%d")
                         months_diff = relativedelta(end_date, start_date).months
-                        #print("Number of months between the two dates:", months_diff)
 
-                        #if ((months_diff == 11) and dimension_period_start.endswith(fy_start) and dimension_period_end.endswith(fy_end)):
                         if (months_diff == 11):
                             new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                         else:
@@ -321,12 +315,7 @@ final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
 #print(json_data)
 for year in json_data.keys():
-    net_interest_expense = None
-    #net_interest_expense = json_data[year]['net_interest_expense']
-    #print(net_interest_expense)    
-
-    #"net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : 
-    # "calc:{interest_expense+interest_income}"}
+    net_interest_expense = None # "calc:{interest_expense+interest_income}"}
     interest_expense = None
     interest_income = None
     net_interest_expense = None
@@ -341,12 +330,12 @@ for year in json_data.keys():
     if net_interest_expense is None:
         net_interest_expense = interest_expense + interest_income
         new_item = {"fact" : 'net_interest_expense', "label": "Net Interest Expense", "value": int(net_interest_expense), "concept": "calc:{interest_expense+interest_income}", "year" : year, "reported_period": ""}
+        new_df = pd.DataFrame([new_item])
+        final_df = pd.concat([final_df, new_df], ignore_index=True)
         json_data[year].append(new_item)
     
-    #df = pd.DataFrame.from_dict(json_data[year], orient='columns')
-    #print(df)
-
-    print(json_data[year])
+    #print(final_df)
+    #print(json_data[year])
 
     '''
     if not('net_interest_expense' in json_data[year]):
