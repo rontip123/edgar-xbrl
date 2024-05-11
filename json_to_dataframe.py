@@ -184,7 +184,7 @@ for year in json_data.keys():
     
     #print(final_df)
     #print(json_data[year])
-
+        
 # handle ebitda
 for year in json_data.keys():    
     net_income = None
@@ -214,35 +214,28 @@ for year in json_data.keys():
     
     #print(final_df)
     #print(json_data[year])
-'''
-# Check and calculate EBITDA for each period ending in 12-31
-for period in json_data.keys():
-    if period.endswith("12-31"):
-        if "EBITDA" not in [item["label"] for item in json_data[period]]:
-            net_income = 0
-            interest_expense = 0
-            tax_expense = 0
-            depreciation_amortization_expense = 0
-            for item in json_data[period]:
-                if item["label"] == "Net Interest Expense":
-                    net_interest_expense = item["value"]
-                    net_interest_expense_concept = item["concept"]
-                elif item["label"] == "Net Income":
-                    net_income = item["value"]
-                    net_income_concept = item["concept"]
-                elif item["label"] == "Tax Expense":
-                    tax_expense = item["value"]
-                    tax_expense_concept = item["concept"]
-                elif item["label"] == "Depreciation & Amortization Expense":
-                    depreciation_amortization_expense = item["value"]
-                    depreciation_amortization_expense_concept = item["concept"]
-                
-            ebitda = net_interest_expense + net_income + tax_expense + depreciation_amortization_expense
-            
-            ebitda_concept = "calc: Net Income + Interest Expense + Tax Expense + Depreciation & Amortization Expense"
 
-            json_data[period].append({"label": "EBITDA", "value": ebitda, "concept": ebitda_concept})
-'''            
+# handle ebitda_margin
+for year in json_data.keys():    
+    ebitda = None
+    revenue = None
+    ebitda_margin = None #calc:{(ebitda/revenue)*100}
+
+    for year_data in json_data[year]:
+        if year_data['fact'] == 'ebitda':
+            ebitda = year_data['value']
+        if year_data['fact'] == 'revenue':
+            revenue= year_data['value']
+       
+    if ebitda_margin is None:
+        ebitda_margin = (ebitda / revenue) * 100
+        new_item = {"fact" : 'ebitda_margin', "label": "EBITDA Margin", "value": ebitda_margin, "concept": "calc:{(ebitda/revenue)*100}", "year" : year, "reported_period": "calculated"}
+        new_df = pd.DataFrame([new_item])
+        final_df = pd.concat([final_df, new_df], ignore_index=True)
+        json_data[year].append(new_item)
+
+    #print(final_df)
+    #print(json_data[year])   
 
 '''
 # Check and calculate EBITDA Margin for each period ending in 12-31
@@ -270,14 +263,7 @@ for period in json_data.keys():
 # Write to sorted and calculate JSON
 processed_json = json_file.replace('.json', '-processed.json')
 with open(json_file_path+processed_json, 'w') as formatted_file: 
-    json.dump(json_data, formatted_file, indent=4)
-    
-# Convert JSON to DataFrame
-#final_df = pd.DataFrame([item for year in json_data.values() for item in year])
-#final_df = df.rename(columns={'label': 'Metric', 'value': 'Value', 'concept': 'Concept'})
-#final_df = pd.concat({k: pd.DataFrame(v) for k, v in json_data.items()}, names=['Year']).reset_index(level=1, drop=True).reset_index()
-#final_df = pd.concat({k: pd.DataFrame(v) for k, v in json_data.items()}).reset_index(level=1, drop=True).reset_index()
-
+    json.dump(json_data, formatted_file, indent=4)    
 
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
