@@ -23,6 +23,22 @@ taxonomy_mapping_tmpl = {
 }
 
 taxonomy_mapping = {   
+    "amcx": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InvestmentIncomeInterest"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "LongTermDebtNoncurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtCurrent"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebt"},
+    },
     "chtr": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
@@ -35,6 +51,24 @@ taxonomy_mapping = {
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
         "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    },
+    "cmcsa": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation": {"label" : "Depreciation", "taxonomy_key" : "Depreciation"},
+        "amortization": {"label" : "Amortization", "taxonomy_key" : "AmortizationOfIntangibleAssets"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : ""},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_current"},
     },         
     "dis": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -115,13 +149,15 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "wbd"
+ticker = "cmcsa"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
 
 json_files = {
+    "amcx": "amcx-20231231.json",
     "chtr": "chtr-20231231.json",
+    "cmcsa": "cmcsa-20231231.json",
     "dis": "dis-20230930.json",
     "para": "para-20231231.json",
     "t": "t-20231231.json",
@@ -233,7 +269,28 @@ for year in json_data.keys():
     
     #print(final_df)
     #print(json_data[year])
-        
+
+# handle depreciaton & amortization expense
+for year in json_data.keys():    
+    depreciation_amortization_expense = None
+    depreciation = 0
+    amortization = 0
+
+    for year_data in json_data[year]:
+        if year_data['fact'] == 'depreciation_amortization_expense':
+            depreciation_amortization_expense = year_data['value']
+        if year_data['fact'] == 'depreciation':
+            depreciation = year_data['value']
+        if year_data['fact'] == 'amortization':
+            amortization = year_data['value']
+       
+    if depreciation_amortization_expense is None:
+        depreciation_amortization_expense = depreciation + amortization
+        new_item = {"fact" : 'depreciation_amortization_expense', "label": "Depreciation & Amortization Expense", "value": depreciation_amortization_expense, "concept": "calc:{(depreciation + amoritization)}", "year" : year, "reported_period": "calculated"}
+        new_df = pd.DataFrame([new_item])
+        final_df = pd.concat([final_df, new_df], ignore_index=True)
+        json_data[year].append(new_item)
+
 # handle ebitda
 for year in json_data.keys():    
     net_income = None
