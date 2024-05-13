@@ -9,28 +9,33 @@ taxonomy_mapping_tmpl = {
         "net_income" : {"label" : "Net Income", "taxonomy_key" : ""},
         "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
         "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
-        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
         "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : ""},
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : ""},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
-        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_current"},
     }
 }
 
 taxonomy_mapping = {   
-    "para": {
-        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+    "chtr": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
-        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
-        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InterestIncomeOther"},
-        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "InterestIncomeExpenseNet"},
         "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
-        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAmortizationAndAccretionNet"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
-    }, 
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    },         
     "dis": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
@@ -41,13 +46,24 @@ taxonomy_mapping = {
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},        
-    },
+    },    
+    "para": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InterestIncomeOther"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+    }, 
     "t": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "ProfitLoss"},
         "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
         "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InterestIncomeOther"},
-        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
         "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
@@ -63,14 +79,43 @@ taxonomy_mapping = {
         "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "InterestIncomeExpenseNonoperatingNet"},
         "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income-interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+    },
+    "vz": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense+interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
         "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
-    }    
+    },
+    "wbd": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_current"},
+    }
 }
 
-ticker = "dis"
+ticker = "wbd"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -81,8 +126,10 @@ json_files = {
     "para": "para-20231231.json",
     "t": "t-20231231.json",
     "tmus": "tmus-20231231.json",
-    "vz": "vz-20231231.json"
+    "vz": "vz-20231231.json",
+    "wbd": "wbd-20231231.json"
 }
+
 json_file = json_files[ticker]
 
 with open(json_file_path + json_file, 'r') as file:
@@ -166,8 +213,8 @@ json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_d
 # handle net_interest_expense
 for year in json_data.keys():
     net_interest_expense = None # "calc:{interest_expense+interest_income}"}
-    interest_expense = None
-    interest_income = None
+    interest_expense = 0
+    interest_income = 0
     net_interest_expense = None
     for year_data in json_data[year]:
         if year_data['fact'] == 'interest_expense':
@@ -178,7 +225,7 @@ for year in json_data.keys():
             net_interest_expense = year_data['value']
     
     if net_interest_expense is None:
-        net_interest_expense = interest_expense + interest_income
+        net_interest_expense = interest_expense - interest_income
         new_item = {"fact" : 'net_interest_expense', "label": "Net Interest Expense", "value": int(net_interest_expense), "concept": "calc:{interest_expense+interest_income}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
@@ -190,7 +237,7 @@ for year in json_data.keys():
 # handle ebitda
 for year in json_data.keys():    
     net_income = None
-    interest_expense = None
+    net_interest_expense = None
     tax_expense = None
     depreciation_amortization_expense = None
     ebitda = None #calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}
@@ -198,8 +245,8 @@ for year in json_data.keys():
     for year_data in json_data[year]:
         if year_data['fact'] == 'net_income':
             net_income = year_data['value']
-        if year_data['fact'] == 'interest_expense':
-            interest_expense= year_data['value']
+        if year_data['fact'] == 'net_interest_expense':
+            net_interest_expense= year_data['value']
         if year_data['fact'] == 'tax_expense':
             tax_expense = year_data['value']
         if year_data['fact'] == 'depreciation_amortization_expense':
@@ -207,8 +254,12 @@ for year in json_data.keys():
         if year_data['fact'] == 'ebitda':
             ebitda = year_data['value']
     
-    if ebitda is None and net_income is not None and interest_expense is not None and tax_expense is not None and depreciation_amortization_expense is not None:
-        ebitda = net_income + interest_expense + tax_expense + depreciation_amortization_expense
+    # if net_interest_expese in negative then multiply by -1 (make positive)
+    if net_interest_expense is not None and net_interest_expense < 0:
+        net_interest_expense = net_interest_expense * -1
+
+    if ebitda is None and net_income is not None and net_interest_expense is not None and tax_expense is not None and depreciation_amortization_expense is not None:
+        ebitda = net_income + net_interest_expense + tax_expense + depreciation_amortization_expense
         new_item = {"fact" : 'ebitda', "label": "EBITDA", "value": int(ebitda), "concept": "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
