@@ -364,29 +364,6 @@ for year in json_data.keys():
     #print(final_df)
     #print(json_data[year])   
 
-'''
-# Check and calculate EBITDA Margin for each period ending in 12-31
-for period in json_data.keys():
-    if period.endswith("12-31"):
-        if "EBITDA Margin" not in [item["label"] for item in json_data[period]]:
-            ebitda = 0
-            revenue = 0            
-            for item in json_data[period]:
-                if item["label"] == "Revenue":
-                    revenue = item["value"]
-                    revenue_concept = item["concept"]
-                elif item["label"] == "EBITDA":
-                    ebitda = item["value"]
-                    ebitda_concept = item["concept"]
-                
-            ebitda_margin = (ebitda / revenue) * 100
-
-            #ebitda_margin_concept = "calc: " + ebitda_concept + "/" + revenue_concept
-            ebitda_margin_concept = "calc: EBITDA / Revenue * 100"
-
-            json_data[period].append({"label": "EBITDA Margin", "value": ebitda_margin, "concept": ebitda_margin_concept})
-'''
-
 # Write to sorted and calculate JSON
 processed_json = json_file.replace('.json', '-processed.json')
 with open(json_file_path+processed_json, 'w') as formatted_file: 
