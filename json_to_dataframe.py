@@ -91,7 +91,23 @@ taxonomy_mapping = {
         "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationAndAmortization"},
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
-    }, 
+    },
+    "sats": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLossAvailableToCommonStockholdersBasic"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpenseNetOfAmountCapitalized"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InvestmentIncomeNet"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "LongTermDebtAndFinanceLeaseObligationsNetOfCurrentPortion"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
+    },     
     "t": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "ProfitLoss"},
@@ -149,7 +165,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "cmcsa"
+ticker = "sats"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -160,6 +176,7 @@ json_files = {
     "cmcsa": "cmcsa-20231231.json",
     "dis": "dis-20230930.json",
     "para": "para-20231231.json",
+    "sats": "tmb-20231231x10k.json",
     "t": "t-20231231.json",
     "tmus": "tmus-20231231.json",
     "vz": "vz-20231231.json",
