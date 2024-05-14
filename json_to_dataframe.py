@@ -165,7 +165,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "sats"
+ticker = "para"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -260,16 +260,17 @@ for next_key in xbrl_keys:
                         
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
-json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
+#json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
 #print(json_data)
 
 # handle net_interest_expense
-for year in json_data.keys():
+for year in final_df['year'].unique():
     net_interest_expense = None # "calc:{interest_expense+interest_income}"}
     interest_expense = 0
     interest_income = 0
     net_interest_expense = None
-    for year_data in json_data[year]:
+    year_data_df = final_df[final_df['year'] == year]
+    for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'interest_expense':
             interest_expense = year_data['value']
         if year_data['fact'] == 'interest_income':
@@ -282,18 +283,19 @@ for year in json_data.keys():
         new_item = {"fact" : 'net_interest_expense', "label": "Net Interest Expense", "value": int(net_interest_expense), "concept": "calc:{interest_expense+interest_income}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        json_data[year].append(new_item)
+        #json_data[year].append(new_item)
     
     #print(final_df)
     #print(json_data[year])
 
 # handle depreciaton & amortization expense
-for year in json_data.keys():    
+for year in final_df['year'].unique():   
     depreciation_amortization_expense = None
     depreciation = 0
     amortization = 0
 
-    for year_data in json_data[year]:
+    year_data_df = final_df[final_df['year'] == year]
+    for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'depreciation_amortization_expense':
             depreciation_amortization_expense = year_data['value']
         if year_data['fact'] == 'depreciation':
@@ -306,17 +308,18 @@ for year in json_data.keys():
         new_item = {"fact" : 'depreciation_amortization_expense', "label": "Depreciation & Amortization Expense", "value": depreciation_amortization_expense, "concept": "calc:{(depreciation + amoritization)}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        json_data[year].append(new_item)
+        #json_data[year].append(new_item)
 
 # handle ebitda
-for year in json_data.keys():    
+for year in final_df['year'].unique():   
     net_income = None
     net_interest_expense = None
     tax_expense = None
     depreciation_amortization_expense = None
     ebitda = None #calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}
 
-    for year_data in json_data[year]:
+    year_data_df = final_df[final_df['year'] == year]
+    for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'net_income':
             net_income = year_data['value']
         if year_data['fact'] == 'net_interest_expense':
@@ -337,18 +340,19 @@ for year in json_data.keys():
         new_item = {"fact" : 'ebitda', "label": "EBITDA", "value": int(ebitda), "concept": "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        json_data[year].append(new_item)
+        #json_data[year].append(new_item)
     
     #print(final_df)
     #print(json_data[year])
 
 # handle ebitda_margin
-for year in json_data.keys():    
+for year in final_df['year'].unique():   
     ebitda = None
     revenue = None
     ebitda_margin = None #calc:{(ebitda/revenue)*100}
 
-    for year_data in json_data[year]:
+    year_data_df = final_df[final_df['year'] == year]
+    for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'ebitda':
             ebitda = year_data['value']
         if year_data['fact'] == 'revenue':
@@ -359,15 +363,19 @@ for year in json_data.keys():
         new_item = {"fact" : 'ebitda_margin', "label": "EBITDA Margin", "value": ebitda_margin, "concept": "calc:{(ebitda/revenue)*100}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        json_data[year].append(new_item)
+        #json_data[year].append(new_item)
 
     #print(final_df)
     #print(json_data[year])   
 
 # Write to sorted and calculate JSON
+json_data = final_df.groupby('year').apply(lambda x: x.drop('year', axis=1).to_dict(orient='records')).to_dict()
 processed_json = json_file.replace('.json', '-processed.json')
 with open(json_file_path+processed_json, 'w') as formatted_file: 
-    json.dump(json_data, formatted_file, indent=4)    
+    #for year in json_data.keys():
+        #sorted_items = sorted(json_data[year], key=lambda item: taxonomy_mapping[ticker][item['fact']]['taxonomy_key'])
+        #json_data[year] = sorted_items
+    json.dump(json_data, formatted_file, indent=4)
 
 # Write to CSV
 csv_file = json_file.replace('.json', '.csv')
