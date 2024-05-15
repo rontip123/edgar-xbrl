@@ -225,7 +225,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "cmcsa"
+ticker = "tmus"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -323,11 +323,13 @@ final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 
 # handle net_interest_expense
 for year in final_df['year'].unique():
+    year_data_df = final_df[final_df['year'] == year]
+    
     net_interest_expense = None # "calc:{interest_expense+interest_income}"}
     interest_expense = 0
     interest_income = 0
     net_interest_expense = None
-    year_data_df = final_df[final_df['year'] == year]
+    
     for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'interest_expense':
             interest_expense = year_data['value']
@@ -341,18 +343,12 @@ for year in final_df['year'].unique():
         new_item = {"fact" : 'net_interest_expense', "label": "Net Interest Expense", "value": int(net_interest_expense), "concept": "calc:{interest_expense+interest_income}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        #json_data[year].append(new_item)
-    
-    #print(final_df)
-    #print(json_data[year])
 
-# handle depreciaton & amortization expense
-for year in final_df['year'].unique():   
+    # handle depreciaton & amortization expense
     depreciation_amortization_expense = None
     depreciation = 0
     amortization = 0
-
-    year_data_df = final_df[final_df['year'] == year]
+    
     for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'depreciation_amortization_expense':
             depreciation_amortization_expense = year_data['value']
@@ -365,18 +361,15 @@ for year in final_df['year'].unique():
         depreciation_amortization_expense = depreciation + amortization
         new_item = {"fact" : 'depreciation_amortization_expense', "label": "Depreciation & Amortization Expense", "value": depreciation_amortization_expense, "concept": "calc:{(depreciation + amoritization)}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
-        final_df = pd.concat([final_df, new_df], ignore_index=True)
-        #json_data[year].append(new_item)
+        final_df = pd.concat([final_df, new_df], ignore_index=True)       
 
-# handle ebitda
-for year in final_df['year'].unique():   
+    # handle ebitda
     net_income = None
-    net_interest_expense = None
+    #net_interest_expense = None
     tax_expense = None
-    depreciation_amortization_expense = None
+    #depreciation_amortization_expense = None
     ebitda = None #calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}
-
-    year_data_df = final_df[final_df['year'] == year]
+    
     for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'net_income':
             net_income = year_data['value']
@@ -398,13 +391,8 @@ for year in final_df['year'].unique():
         new_item = {"fact" : 'ebitda', "label": "EBITDA", "value": int(ebitda), "concept": "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        #json_data[year].append(new_item)
-    
-    #print(final_df)
-    #print(json_data[year])
 
-# handle ebitda_margin
-for year in final_df['year'].unique():   
+    # handle ebitda_margin
     ebitda = None
     revenue = None
     ebitda_margin = None #calc:{(ebitda/revenue)*100}
@@ -421,15 +409,8 @@ for year in final_df['year'].unique():
         new_item = {"fact" : 'ebitda_margin', "label": "EBITDA Margin", "value": ebitda_margin, "concept": "calc:{(ebitda/revenue)*100}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
-        #json_data[year].append(new_item)
 
-    #print(final_df)
-    #print(json_data[year])   
-
-#"cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
-#"free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
-# handle cash_flow_capex and free_cash_flow
-for year in final_df['year'].unique():   
+    # handle cash_flow_capex and free_cash_flow
     cash_flow_capex = None #calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"
     free_cash_flow = None #calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"
     capex_tangible_assets = 0
