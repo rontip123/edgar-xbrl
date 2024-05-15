@@ -61,7 +61,7 @@ taxonomy_mapping = {
         "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
         "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
         "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
-        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{0}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"}, 
     },
     "cmcsa": {
@@ -225,7 +225,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "tmus"
+ticker = "chtr"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
