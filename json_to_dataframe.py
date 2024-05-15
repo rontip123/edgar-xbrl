@@ -225,7 +225,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "sats"
+ticker = "cmcsa"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -427,12 +427,15 @@ for year in final_df['year'].unique():
     #print(json_data[year])   
 
 #"cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
-# handle ebitda_margin
+#"free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
+# handle cash_flow_capex and free_cash_flow
 for year in final_df['year'].unique():   
     cash_flow_capex = None #calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"
+    free_cash_flow = None #calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"
     capex_tangible_assets = 0
     refunds_capex = 0
     capex_intangible_assets = 0
+    net_cash_flow_from_operating_activities = 0
     
     year_data_df = final_df[final_df['year'] == year]
     for index, year_data in year_data_df.iterrows():
@@ -442,12 +445,23 @@ for year in final_df['year'].unique():
             refunds_capex= year_data['value']
         if year_data['fact'] == 'capex_intangible_assets':
             capex_intangible_assets= year_data['value']
+        if year_data['fact'] == 'net_cash_flow_from_operating_activities':
+            net_cash_flow_from_operating_activities = year_data['value']
         if year_data['fact'] == 'cash_flow_capex':
             cash_flow_capex = year_data['value']
+        if year_data['fact'] == 'free_cash_flow':
+            free_cash_flow = year_data['value']
        
     if cash_flow_capex is None and capex_tangible_assets is not None and refunds_capex is not None and capex_intangible_assets is not None:
         cash_flow_capex = capex_tangible_assets-refunds_capex+capex_intangible_assets
         new_item = {"fact" : 'cash_flow_capex', "label": "Cash Flow from Capital Expenditures", "value": cash_flow_capex, "concept": "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}", "year" : year, "reported_period": "calculated"}
+        new_df = pd.DataFrame([new_item])
+        final_df = pd.concat([final_df, new_df], ignore_index=True)
+    
+    #calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"
+    if free_cash_flow is None and cash_flow_capex is not None and net_cash_flow_from_operating_activities is not None:
+        free_cash_flow = net_cash_flow_from_operating_activities-cash_flow_capex
+        new_item = {"fact" : 'free_cash_flow', "label": "Free Cash Flow", "value": free_cash_flow, "concept": "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}", "year" : year, "reported_period": "calculated"}
         new_df = pd.DataFrame([new_item])
         final_df = pd.concat([final_df, new_df], ignore_index=True)
 
