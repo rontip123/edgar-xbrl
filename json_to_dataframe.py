@@ -56,7 +56,13 @@ taxonomy_mapping = {
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
-        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"}, 
     },
     "cmcsa": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -72,6 +78,12 @@ taxonomy_mapping = {
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
         "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "PaymentsToAcquireIntangibleAssets"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
         "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
         "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_current"},
@@ -108,7 +120,7 @@ taxonomy_mapping = {
         "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
         "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
-        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},               
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"}, 
     },
     "sats": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -122,6 +134,12 @@ taxonomy_mapping = {
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
         "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquirePropertyPlantAndEquipment"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "ProceedsFromRefundOfPropertyAndEquipment"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt", "taxonomy_key" : "LongTermDebtAndFinanceLeaseObligationsNetOfCurrentPortion"},
         "debt_long_term_current_portion" : {"label" : "Long Term Debt - Current Portion", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
         "debt": {"label" : "Total Debt", "taxonomy_key" : "DebtAndCapitalLeaseObligations"},
@@ -137,7 +155,13 @@ taxonomy_mapping = {
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
-        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivitiesContinuingOperations"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "PaymentsToAcquireProductiveAssets"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
     },
     "tmus": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -169,7 +193,13 @@ taxonomy_mapping = {
         "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
         "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
         "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
-        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""}
+        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquireOtherProductiveAssets"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "PaymentsToAcquireIntangibleAssets"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},        
     },
     "wbd": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -195,7 +225,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "tmus"
+ticker = "sats"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -412,6 +442,8 @@ for year in final_df['year'].unique():
             refunds_capex= year_data['value']
         if year_data['fact'] == 'capex_intangible_assets':
             capex_intangible_assets= year_data['value']
+        if year_data['fact'] == 'cash_flow_capex':
+            cash_flow_capex = year_data['value']
        
     if cash_flow_capex is None and capex_tangible_assets is not None and refunds_capex is not None and capex_intangible_assets is not None:
         cash_flow_capex = capex_tangible_assets-refunds_capex+capex_intangible_assets
