@@ -140,12 +140,13 @@ taxonomy_mapping = {
         "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
         "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
-        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"}, 
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},         
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligations"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
     },
     "sats": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -271,7 +272,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "sats"
+ticker = "para"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
