@@ -270,7 +270,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "sats"
+ticker = "cmcsa"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -371,15 +371,16 @@ final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 # handle net_interest_expense
 for year in final_df['year'].unique():
     year_data_df = final_df[final_df['year'] == year]
-    
-    net_interest_expense = None # "calc:{interest_expense+interest_income}"}
+        
     interest_expense = 0
     interest_income = 0
     net_interest_expense = None
+    is_net_interest_expense_calced = True
     
     for index, year_data in year_data_df.iterrows():
         if year_data['fact'] == 'interest_expense':
             interest_expense = year_data['value']
+            is_net_interest_expense_calced = False
         if year_data['fact'] == 'interest_income':
             interest_income= year_data['value']
         if year_data['fact'] == 'net_interest_expense':
@@ -431,7 +432,10 @@ for year in final_df['year'].unique():
     
     # if net_interest_expese in negative then multiply by -1 (make positive)
     if net_interest_expense is not None and net_interest_expense < 0:
-        net_interest_expense = net_interest_expense * -1    
+        net_interest_expense = net_interest_expense * -1
+    elif (is_net_interest_expense_calced == True and
+          abs(interest_expense) < abs(interest_income)):
+        net_interest_expense = net_interest_expense * -1
     
     '''
     # if net_interest_expese in negative then multiply by -1 (make positive)
