@@ -213,7 +213,7 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent", "member_axis": ["SeniorNotesMember", "NonrelatedPartyMember"]},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
         "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
         "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
@@ -270,7 +270,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "cmcsa"
+ticker = "tmus"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -333,13 +333,26 @@ for next_key in xbrl_keys:
         xbrl_key = xbrl_keys[next_key]
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
+            dim_len = len(dimensions.items())
             # handle member in dimensions
             # TMUS ex: "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent", "member_axis" : ["SeniorNotesMember", "NonrelatedPartyMember"]},
-            if len(dimensions.items()) == 4:            
+            member_axis = xbrl_key.get("member_axis")
+            member_len = 0
+            if member_axis is not None:
+                member_len = len(member_axis)
+                #dim_len = dim_len + member_len
+                         
+            #if len(dimensions.items()) == 4: 
+            if dim_len == (4 + member_len):
                 for key, value in dimensions.items():
                     dimension_period = item["dimensions"]["period"]
                     new_item = None
-
+                    
+                    
+                    # check if item["dimension"] has values that match all the elements in member_axis
+                    if member_axis is not None and not set(member_axis).issubset(set(item["dimensions"].values())):
+                        continue
+                    
                     if "/" in dimension_period:
                         dimension_period_parts = dimension_period.split("/")
                     
