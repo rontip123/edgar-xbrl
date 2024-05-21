@@ -270,7 +270,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "tmus"
+ticker = "cmcsa"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -381,6 +381,23 @@ for next_key in xbrl_keys:
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 
+
+'''
+# compare significant figure
+# for each record in duplicates df, find other records with the same fact and year and find the record with the most precise value
+duplicates_df = final_df[final_df.duplicated(subset=['fact', 'year'], keep=False)]
+for index, row in duplicates_df.iterrows():
+    fact = row['fact']
+    year = row['year']
+    filtered_df = final_df[(final_df['fact'] == fact) & (final_df['year'] == year)]
+    max_value = filtered_df['value'].max()
+    #most_precise_value =  
+    filtered_df = filtered_df[filtered_df['value'] == max_value]
+    final_df = final_df.drop(filtered_df.index)
+
+#print(duplicates_df)
+'''
+
 # handle net_interest_expense
 for year in final_df['year'].unique():
     year_data_df = final_df[final_df['year'] == year]
@@ -446,9 +463,10 @@ for year in final_df['year'].unique():
     # if net_interest_expese in negative then multiply by -1 (make positive)
     if net_interest_expense is not None and net_interest_expense < 0:
         net_interest_expense = net_interest_expense * -1
-    elif (is_net_interest_expense_calced == True and
-          abs(interest_expense) < abs(interest_income)):
-        net_interest_expense = net_interest_expense * -1
+
+        if (abs(interest_expense) < abs(interest_income)):
+            net_interest_expense = net_interest_expense * -1
+        
     
     '''
     # if net_interest_expese in negative then multiply by -1 (make positive)
