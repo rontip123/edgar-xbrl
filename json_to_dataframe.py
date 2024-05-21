@@ -46,9 +46,9 @@ taxonomy_mapping = {
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
         "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        #"debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebt"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
     },
     "chtr": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -69,12 +69,10 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{0}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"}, 
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
-        #"debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},        
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        #"debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},        
     },
     "cmcsa": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -97,11 +95,10 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligations"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "DebtCurrent"},
-        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "DebtCurrent"},        
+        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "DebtInstrumentCarryingAmount"},
         "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},        
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
     },         
     "dis": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -120,10 +117,11 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},
-        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
+        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "cal:{0}"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
     },    
     "para": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -167,7 +165,7 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtAndFinanceLeaseObligationsNetOfCurrentPortion"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
         "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
         "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
@@ -194,9 +192,7 @@ taxonomy_mapping = {
         "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "CommercialPaper"},
         "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        #"debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},        
     },
     "tmus": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -217,10 +213,11 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent", "member_axis" : ["SeniorNotesMember", "NonrelatedPartyMember"]},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebt"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
     },
     "vz": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
@@ -241,10 +238,10 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligations"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},
-        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        "debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        #"debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsIncludingCurrentMaturities"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligationsCurrent"},        
+        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "ShortTermBorrowings"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},        
     },
     "wbd": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
@@ -265,14 +262,15 @@ taxonomy_mapping = {
         "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
         "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},
         "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtAndCapitalLeaseObligations"},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent"},        
         "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "calc:{0}"},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : "calc:debt_long_term_current_portion+debt_commercial_paper"},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "LongTermDebt"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
     }
 }
 
-ticker = "para"
+ticker = "sats"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
