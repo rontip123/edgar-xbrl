@@ -122,7 +122,36 @@ taxonomy_mapping = {
         "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
         "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
         
-    },    
+    }, 
+    "nvda": {
+        "revenue" : {"label" : "Revenue", "taxonomy_key" : "Revenues"},
+        "revenue_cost" : {"label" : "Cost of Revenue", "taxonomy_key" : "CostOfRevenue"},
+        "gross_profit" : {"label" : "Gross Profit", "taxonomy_key" : "GrossProfit"},
+        "operating_expense" : {"label" : "Operating Expense", "taxonomy_key" : "OperatingExpenses"},
+        "rnd_expense" : {"label" : "R&D Expense", "taxonomy_key" : "ResearchAndDevelopmentExpense"},
+        "sgna_expense" : {"label" : "SG&A Expense", "taxonomy_key" : "SellingGeneralAndAdministrativeExpense"},
+        "operating_income" : {"label" : "Operating Income", "taxonomy_key" : "OperatingIncomeLoss"},
+        "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
+        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : "InterestExpense"},
+        "interest_income": {"label" : "Interest Income", "taxonomy_key" : "InvestmentIncomeInterest"},
+        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
+        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : "IncomeTaxExpenseBenefit"},
+        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : "DepreciationDepletionAndAmortization"},
+        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
+        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
+        "net_cash_flow_from_operating_activities": {"label" : "Net Cash Flow from Operating Activities", "taxonomy_key" : "NetCashProvidedByUsedInOperatingActivities"},
+        "capex_tangible_assets": {"label" : "Capital Expenditure on Tangible Assets", "taxonomy_key" : "PaymentsToAcquireProductiveAssets"},
+        "refunds_capex": {"label" : "Refunds on Capital Expenditure on Tangible Assets", "taxonomy_key" : "calc:{0}"},
+        "capex_intangible_assets": {"label" : "Capital Expenditure on Intangible Assets", "taxonomy_key" : "calc:{0}"},
+        "cash_flow_capex": {"label" : "Cash Flow from Capital Expenditure", "taxonomy_key" : "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"},
+        "free_cash_flow": {"label" : "Free Cash Flow", "taxonomy_key" : "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"},         
+        "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : "LongTermDebtNoncurrent"},
+        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "DebtCurrent"},        
+        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : "CommercialPaper"},
+        "debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+current_debt"},
+        
+    },       
     "para": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
@@ -270,7 +299,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "cmcsa"
+ticker = "nvda"
 xbrl_keys = taxonomy_mapping[ticker]
 # Load JSON data from file
 json_file_path = './json/'
@@ -280,6 +309,7 @@ json_files = {
     "chtr": "chtr-20231231.json",
     "cmcsa": "cmcsa-20231231.json",
     "dis": "dis-20230930.json",
+    "nvda": "nvda-20240128.json",
     "para": "para-20231231.json",
     "sats": "tmb-20231231x10k.json",
     "t": "t-20231231.json",
@@ -382,7 +412,7 @@ for next_key in xbrl_keys:
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
 
 
-'''
+
 # compare significant figure
 # for each record in duplicates df, find other records with the same fact and year and find the record with the most precise value
 duplicates_df = final_df[final_df.duplicated(subset=['fact', 'year'], keep=False)]
@@ -390,13 +420,20 @@ for index, row in duplicates_df.iterrows():
     fact = row['fact']
     year = row['year']
     filtered_df = final_df[(final_df['fact'] == fact) & (final_df['year'] == year)]
+    #TODO: find the value with the most significant figure
     max_value = filtered_df['value'].max()
+    most_precise_value = filtered_df[filtered_df['value'] == max_value]
+    #final_df = final_df.drop(most_precise_value.index)
+    
+    print(filtered_df)
+    print(most_precise_value)
+    #max_value = filtered_df['value'].max()
     #most_precise_value =  
-    filtered_df = filtered_df[filtered_df['value'] == max_value]
-    final_df = final_df.drop(filtered_df.index)
+    #filtered_df = filtered_df[filtered_df['value'] == max_value]
+    #final_df = final_df.drop(filtered_df.index)
 
 #print(duplicates_df)
-'''
+
 
 # handle net_interest_expense
 for year in final_df['year'].unique():

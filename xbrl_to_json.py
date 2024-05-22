@@ -20,6 +20,8 @@ cmcsa_schema_url = "https://www.sec.gov/Archives/edgar/data/0001166691/000116669
 
 dis_schema_url = "https://www.sec.gov/Archives/edgar/data/1744489/000174448923000216/dis-20230930.htm"
 
+nvda_schema_url = "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm"
+
 para_schema_url = "https://www.sec.gov/Archives/edgar/data/813828/000081382824000007/para-20231231.htm"
 
 sats_schema_url = "https://www.sec.gov/Archives/edgar/data/1415404/000155837024002209/tmb-20231231x10k.htm"
@@ -32,7 +34,7 @@ vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/0000732712240000
 
 wbd_schema_url = "https://www.sec.gov/Archives/edgar/data/1437107/000143710724000017/wbd-20231231.htm"
 
-schema_url = sats_schema_url
+schema_url = nvda_schema_url
 json_filename = schema_url.split("/")[-1:]
 json_filename = json_filename[0].split(".")[0]
 output_json = json_filename + ".json"
