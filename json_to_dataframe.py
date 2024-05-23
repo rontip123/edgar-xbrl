@@ -1,7 +1,10 @@
 import json
 import pandas as pd
+import boto3
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
+s3 = boto3.client('s3')
 
 taxonomy_mapping_tmpl = {
     "ticker": {
@@ -299,8 +302,19 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "nvda"
-xbrl_keys = taxonomy_mapping[ticker]
+ticker = "para"
+
+use_local_mapping = False
+if (use_local_mapping): 
+    xbrl_keys = taxonomy_mapping[ticker]
+else:
+    taxonomies_bucket = 'street-smart-taxonomies'
+    taxonomies_key = ticker.upper() + ".json"
+    taxonomy_response = s3.get_object(Bucket=taxonomies_bucket, Key=taxonomies_key)
+    xbrl_keys = json.loads(taxonomy_response['Body'].read().decode('utf-8'))  
+
+#print(xbrl_keys)
+
 # Load JSON data from file
 json_file_path = './json/'
 
@@ -410,8 +424,6 @@ for next_key in xbrl_keys:
                         
 # transform to json object
 final_df = pd.concat(df_list, ignore_index=True).drop_duplicates()
-
-
 
 # compare significant figure
 # for each record in duplicates df, find other records with the same fact and year and find the record with the most precise value
