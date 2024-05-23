@@ -319,10 +319,12 @@ else:
 json_file_path = './json/'
 
 json_files = {
+    "aapl": "aapl-20230930.json",
     "amcx": "amcx-20231231.json",
     "chtr": "chtr-20231231.json",
     "cmcsa": "cmcsa-20231231.json",
     "dis": "dis-20230930.json",
+    "msft": "msft-20230630.json",
     "nvda": "nvda-20240128.json",
     "para": "para-20231231.json",
     "sats": "tmb-20231231x10k.json",

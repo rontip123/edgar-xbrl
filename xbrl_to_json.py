@@ -12,6 +12,8 @@ cache.set_headers({'User-Agent': 'service@street-smart.ai'})
 
 parser = XbrlParser(cache)
 
+aapl_schema_url = "https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm"
+
 amcx_schema_url = "https://www.sec.gov/Archives/edgar/data/1514991/000151499124000007/amcx-20231231.htm"
 
 chtr_schema_url = "https://www.sec.gov/Archives/edgar/data/1091667/000109166724000028/chtr-20231231.htm"
@@ -19,6 +21,8 @@ chtr_schema_url = "https://www.sec.gov/Archives/edgar/data/1091667/0001091667240
 cmcsa_schema_url = "https://www.sec.gov/Archives/edgar/data/0001166691/000116669124000011/cmcsa-20231231.htm"
 
 dis_schema_url = "https://www.sec.gov/Archives/edgar/data/1744489/000174448923000216/dis-20230930.htm"
+
+msft_schema_url = "https://www.sec.gov/Archives/edgar/data/789019/000095017023035122/msft-20230630.htm"
 
 nvda_schema_url = "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000029/nvda-20240128.htm"
 
@@ -34,7 +38,7 @@ vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/0000732712240000
 
 wbd_schema_url = "https://www.sec.gov/Archives/edgar/data/1437107/000143710724000017/wbd-20231231.htm"
 
-schema_url = nvda_schema_url
+schema_url = msft_schema_url
 json_filename = schema_url.split("/")[-1:]
 json_filename = json_filename[0].split(".")[0]
 output_json = json_filename + ".json"
