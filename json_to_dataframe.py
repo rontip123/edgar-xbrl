@@ -532,6 +532,10 @@ for next_key in xbrl_keys:
         if item["dimensions"]["concept"] == xbrl_key["taxonomy_key"]:
             dimensions = item["dimensions"]
             dim_len = len(dimensions.items())
+
+            #if ( next_key == 'eps_basic'):
+                #print(next_key)
+
             # handle member in dimensions
             # TMUS ex: "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent", "member_axis" : ["SeniorNotesMember", "NonrelatedPartyMember"]},
             member_axis = xbrl_key.get("member_axis")
@@ -561,12 +565,12 @@ for next_key in xbrl_keys:
                         years_diff = relativedelta(end_date, start_date).years
 
                         if (years_diff == 1 or months_diff == 11):
-                            new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
+                            new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                         else:
                             continue
                     else:
                         dimension_year = datetime.strptime(dimension_period, "%Y-%m-%d").year
-                        new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
+                        new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
                     
                     filtered_data.append(new_item)
                     '''
