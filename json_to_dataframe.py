@@ -452,7 +452,7 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "para"
+ticker = "dis"
 
 use_local_mapping = False
 if (use_local_mapping): 
@@ -535,23 +535,17 @@ def do_it():
                 dimensions = item["dimensions"]
                 dim_len = len(dimensions.items())
 
-                #if ( next_key == 'eps_basic'):
-                    #print(next_key)
-
                 # handle member in dimensions
                 # TMUS ex: "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : "LongTermDebtCurrent", "member_axis" : ["SeniorNotesMember", "NonrelatedPartyMember"]},
                 member_axis = xbrl_key.get("member_axis")
                 member_len = 0
                 if member_axis is not None:
-                    member_len = len(member_axis)
-                    #dim_len = dim_len + member_len
-                            
-                #if len(dimensions.items()) == 4: 
+                    member_len = len(member_axis)                    
+                
                 if dim_len == (4 + member_len):
                     for key, value in dimensions.items():
                         dimension_period = item["dimensions"]["period"]
                         new_item = None
-                        
                         
                         # check if item["dimension"] has values that match all the elements in member_axis
                         if member_axis is not None and not set(member_axis).issubset(set(item["dimensions"].values())):
@@ -652,10 +646,8 @@ def do_it():
             final_df = pd.concat([final_df, new_df], ignore_index=True)       
 
         # handle ebitda
-        net_income = None
-        #net_interest_expense = None
-        tax_expense = None
-        #depreciation_amortization_expense = None
+        net_income = None        
+        tax_expense = None        
         ebitda = None #calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}
         
         for index, year_data in year_data_df.iterrows():
@@ -675,14 +667,7 @@ def do_it():
             net_interest_expense = net_interest_expense * -1
 
             if (abs(interest_expense) < abs(interest_income)):
-                net_interest_expense = net_interest_expense * -1
-            
-        
-        '''
-        # if net_interest_expese in negative then multiply by -1 (make positive)
-        if (net_interest_expense is not None and net_interest_expense < 0) or ( (abs(interest_expense) < abs(interest_income)) and net_interest_expense > 0 ):
-            net_interest_expense = net_interest_expense * -1    
-        '''
+                net_interest_expense = net_interest_expense * -1            
 
         if ebitda is None and net_income is not None and net_interest_expense is not None and tax_expense is not None and depreciation_amortization_expense is not None:
             ebitda = net_income + net_interest_expense + tax_expense + depreciation_amortization_expense
@@ -746,8 +731,7 @@ def do_it():
 
         # handle debt and debt_current_portion
         debt = None #calc:debt_long_term+debt_long_term_current_portion
-        debt_current_portion = None #calc:debt_long_term_current_portion+debt_commercial_paper
-        #"debt_current": {"label" : "Current Debt", "taxonomy_key" : "calc: debt_long_term_current_portion + debt_commercial_paper"},
+        debt_current_portion = None #calc:debt_long_term_current_portion+debt_commercial_paper        
         debt_current = None
         debt_long_term = 0
         debt_long_term_current_portion = 0
