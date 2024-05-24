@@ -28,6 +28,156 @@ taxonomy_mapping_tmpl = {
 }
 
 taxonomy_mapping = {   
+    "aapl":{
+        "revenue": {
+            "label": "Revenue",
+            "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax"
+        },
+        "revenue_products": {
+            "label": "Product Revenue",
+            "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "member_axis": [
+                "ProductMember"
+            ]
+        },
+        "revenue_services": {
+            "label": "Services Revenue",
+            "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+            "member_axis": [
+                "ServiceMember"
+            ]
+        },
+        "cogs": {
+            "label": "Cost of Goods Sold",
+            "taxonomy_key": "CostOfGoodsAndServicesSold"
+        },
+        "cogs_products": {
+            "label": "Cost of Goods Sold (Products)",
+            "taxonomy_key": "CostOfGoodsAndServicesSold",
+            "member_axis": [
+                "ProductMember"
+            ]
+        },
+        "cogs_services": {
+            "label": "Cost of Goods Sold (Services)",
+            "taxonomy_key": "CostOfGoodsAndServicesSold",
+            "member_axis": [
+                "ServicesMember"
+            ]
+        },
+        "gross_profit": {
+            "label": "Gross Profit",
+            "taxonomy_key": "GrossProfit"
+        },
+        "operating_expense": {
+            "label": "Operating Expense",
+            "taxonomy_key": "OperatingExpenses"
+        },
+        "rnd_expense": {
+            "label": "R&D Expense",
+            "taxonomy_key": "ResearchAndDevelopmentExpense"
+        },
+        "sgna_expense": {
+            "label": "SG&A Expense",
+            "taxonomy_key": "SellingGeneralAndAdministrativeExpense"
+        },
+        "operating_income": {
+            "label": "Operating Income",
+            "taxonomy_key": "OperatingIncomeLoss"
+        },    
+        "net_income": {
+            "label": "Net Income",
+            "taxonomy_key": "NetIncomeLoss"
+        },
+        "interest_expense": {
+            "label": "Interest Expense",
+            "taxonomy_key": "InterestExpense"
+        },
+        "interest_income": {
+            "label": "Interest Income",
+            "taxonomy_key": "InvestmentIncomeInterestAndDividend"
+        },
+        "net_interest_expense": {
+            "label": "Net Interest Expense",
+            "taxonomy_key": "calc:{interest_expense-interest_income}"
+        },
+        "tax_expense": {
+            "label": "Tax Expense",
+            "taxonomy_key": "IncomeTaxExpenseBenefit"
+        },
+        "depreciation_amortization_expense": {
+            "label": "Depreciation & Amortization Expense",
+            "taxonomy_key": "DepreciationDepletionAndAmortization"
+        },
+        "ebitda": {
+            "label": "EBITDA",
+            "taxonomy_key": "calc:{net_income-interest_expense+tax_expense+depreciation_amortization_expense}"
+        },
+        "ebitda_margin": {
+            "label": "EBITDA Margin",
+            "taxonomy_key": "calc:{(ebitda/revenue)*100}"
+        },
+        "adjusted_ebitda": {
+            "label": "Adjusted EBITDA",
+            "taxonomy_key": ""
+        },
+        "adjusted_ebitda_margin": {
+            "label": "Adjusted EBITDA Margin",
+            "taxonomy_key": ""
+        },
+        "eps_basic": {
+            "label": "Earnings Per Share, Basic",
+            "taxonomy_key": "EarningsPerShareBasic"
+        },
+        "eps_diluted": {
+            "label": "Earnings Per Share, Diluted",
+            "taxonomy_key": "EarningsPerShareDiluted"
+        },
+        "net_cash_flow_from_operating_activities": {
+            "label": "Net Cash Flow from Operating Activities",
+            "taxonomy_key": "NetCashProvidedByUsedInOperatingActivities"
+        },
+        "capex_tangible_assets": {
+            "label": "Capital Expenditure on Tangible Assets",
+            "taxonomy_key": "PaymentsToAcquirePropertyPlantAndEquipment"
+        },
+        "refunds_capex": {
+            "label": "Refunds on Capital Expenditure on Tangible Assets",
+            "taxonomy_key": "calc:{0}"
+        },
+        "capex_intangible_assets": {
+            "label": "Capital Expenditure on Intangible Assets",
+            "taxonomy_key": "calc:{0}"
+        },
+        "cash_flow_capex": {
+            "label": "Cash Flow from Capital Expenditure",
+            "taxonomy_key": "calc:{capex_tangible_assets-refunds_capex+capex_intangible_assets}"
+        },
+        "free_cash_flow": {
+            "label": "Free Cash Flow",
+            "taxonomy_key": "calc:{net_cash_flow_from_operating_activities-cash_flow_capex}"
+        },
+        "debt_long_term": {
+            "label": "Long Term Debt (Non-Current)",
+            "taxonomy_key": "LongTermDebtNoncurrent"
+        },
+        "debt_long_term_current_portion": {
+            "label": "Long Term Debt (Current)",
+            "taxonomy_key": "LongTermDebtCurrent"
+        },
+        "debt_commercial_paper": {
+            "label": "Commercial Paper",
+            "taxonomy_key": "calc:{0}"
+        },
+        "debt_current": {
+            "label": "Current Debt",
+            "taxonomy_key": "calc: debt_long_term_current_portion + debt_commercial_paper"
+        },
+        "debt": {
+            "label": "Total Debt",
+            "taxonomy_key": "calc:debt_long_term+current_debt"
+        }
+    },
     "amcx": {
         "revenue" : {"label" : "Revenue", "taxonomy_key" : "RevenueFromContractWithCustomerExcludingAssessedTax"},
         "net_income" : {"label" : "Net Income", "taxonomy_key" : "NetIncomeLoss"},
@@ -302,11 +452,13 @@ taxonomy_mapping = {
     }
 }
 
-ticker = "para"
+ticker = "aapl"
 
-use_local_mapping = False
+use_local_mapping = True
 if (use_local_mapping): 
-    xbrl_keys = taxonomy_mapping[ticker]
+    #xbrl_keys = taxonomy_mapping[ticker]
+    with open("./taxonomies/" + ticker.upper() + ".json", 'r') as file:
+        xbrl_keys = json.load(file)
 else:
     taxonomies_bucket = 'street-smart-taxonomies'
     taxonomies_key = ticker.upper() + ".json"
@@ -406,8 +558,9 @@ for next_key in xbrl_keys:
                         start_date = datetime.strptime(dimension_period_parts[0], "%Y-%m-%d")
                         end_date = datetime.strptime(dimension_period_parts[1], "%Y-%m-%d")
                         months_diff = relativedelta(end_date, start_date).months
+                        years_diff = relativedelta(end_date, start_date).years
 
-                        if (months_diff == 11):
+                        if (years_diff == 1 or months_diff == 11):
                             new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": int(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                         else:
                             continue
