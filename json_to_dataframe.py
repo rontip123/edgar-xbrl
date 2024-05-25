@@ -27,7 +27,7 @@ taxonomy_mapping_tmpl = {
     }
 }
 
-ticker = "cmcsa"
+ticker = "msft"
 
 use_local_mapping = False
 if (use_local_mapping): 
@@ -58,7 +58,8 @@ json_files = {
     "t": "t-20231231.json",
     "tmus": "tmus-20231231.json",
     "vz": "vz-20231231.json",
-    "wbd": "wbd-20231231.json"
+    "wbd": "wbd-20231231.json",
+    "wday": "wday-20240131.json"
 }
 
 json_file = json_files[ticker]
@@ -135,13 +136,19 @@ def do_it():
                             months_diff = relativedelta(end_date, start_date).months
                             years_diff = relativedelta(end_date, start_date).years
 
+                            item_value = item["value"]
+                            # first check if item_value is not a number and has any commas and remove them if it does
+                            #if not item_value.isnumeric():
+                            item_value = str(item_value).replace(',', '')
+                            
+                            #item_value = item_value.replace(',', '')
                             if (years_diff == 1 or months_diff == 11):
-                                new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
+                                new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item_value), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
                             else:
                                 continue
                         else:
                             dimension_year = datetime.strptime(dimension_period, "%Y-%m-%d").year
-                            new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item["value"]), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
+                            new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item_value), "concept": xbrl_key["taxonomy_key"], "year" : dimension_year, "reported_period": dimension_period}
                         
                         filtered_data.append(new_item)
                         '''

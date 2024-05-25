@@ -38,7 +38,9 @@ vz_schema_url = "https://www.sec.gov/Archives/edgar/data/732712/0000732712240000
 
 wbd_schema_url = "https://www.sec.gov/Archives/edgar/data/1437107/000143710724000017/wbd-20231231.htm"
 
-schema_url = msft_schema_url
+wday_schema_url = "https://www.sec.gov/Archives/edgar/data/1327811/000132781124000044/wday-20240131.htm"
+
+schema_url = wday_schema_url
 json_filename = schema_url.split("/")[-1:]
 json_filename = json_filename[0].split(".")[0]
 output_json = json_filename + ".json"
