@@ -137,8 +137,7 @@ def do_it():
                             years_diff = relativedelta(end_date, start_date).years
 
                             item_value = item["value"]
-                            # first check if item_value is not a number and has any commas and remove them if it does
-                            #if not item_value.isnumeric():
+                            # first check if item_value is not a number and has any commas and remove them if it does                            
                             item_value = str(item_value).replace(',', '')
                             
                             #item_value = item_value.replace(',', '')
