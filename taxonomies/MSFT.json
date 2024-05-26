@@ -73,7 +73,7 @@
     },
     "interest_income": {
         "label": "Interest Income",
-        "taxonomy_key": "InvestmentIncomeInterestAndDividend"
+        "taxonomy_key": "InvestmentIncomeNet"
     },
     "net_interest_expense": {
         "label": "Net Interest Expense",

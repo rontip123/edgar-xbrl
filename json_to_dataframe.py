@@ -27,7 +27,7 @@ taxonomy_mapping_tmpl = {
     }
 }
 
-ticker = "msft"
+ticker = "vz"
 
 use_local_mapping = False
 if (use_local_mapping): 
@@ -123,10 +123,18 @@ def do_it():
                         dimension_period = item["dimensions"]["period"]
                         new_item = None
                         
+                        if (next_key == "debt_long_term"):
+                            print(next_key)
                         # check if item["dimension"] has values that match all the elements in member_axis
                         if member_axis is not None and not set(member_axis).issubset(set(item["dimensions"].values())):
                             continue
                         
+                        item_value = item["value"]
+                        # first check if item_value is not a number and has any commas and remove them if it does
+                        if isinstance(item_value, str):
+                            item_value = str(item_value)
+                            item_value = item_value.replace(',', '')
+
                         if "/" in dimension_period:
                             dimension_period_parts = dimension_period.split("/")
                         
@@ -136,10 +144,14 @@ def do_it():
                             months_diff = relativedelta(end_date, start_date).months
                             years_diff = relativedelta(end_date, start_date).years
 
+                            '''
                             item_value = item["value"]
-                            # first check if item_value is not a number and has any commas and remove them if it does                            
-                            item_value = str(item_value).replace(',', '')
-                            
+                            # first check if item_value is not a number and has any commas and remove them if it does
+                            if isinstance(item_value, str):
+                                item_value = str(item_value)
+                                item_value = item_value.replace(',', '')
+                            '''
+
                             #item_value = item_value.replace(',', '')
                             if (years_diff == 1 or months_diff == 11):
                                 new_item = {"fact" : next_key, "label": xbrl_key["label"], "value": float(item_value), "concept": xbrl_key["taxonomy_key"], "year" : end_date.year, "reported_period": dimension_period}
