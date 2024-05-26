@@ -141,7 +141,7 @@
     },
     "net_cash_flow_from_operating_activities": {
         "label": "Net Cash Flow from Operating Activities",
-        "taxonomy_key": "NetCashFlowProvidedByUsedInOperatingActivities"
+        "taxonomy_key": "NetCashProvidedByUsedInOperatingActivities"
     },
     "capex_tangible_assets": {
         "label": "Capital Expenditure on Tangible Assets",
