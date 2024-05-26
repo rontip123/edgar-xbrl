@@ -1,11 +1,39 @@
 {
     "revenue": {
         "label": "Revenue",
-        "taxonomy_key": "Revenues"
+        "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax"
     },
-    "revenue_cost": {
-        "label": "Cost of Revenue",
-        "taxonomy_key": "CostOfRevenue"
+    "revenue_products": {
+        "label": "Product Revenue",
+        "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "member_axis": [
+            "ProductMember"
+        ]
+    },
+    "revenue_services": {
+        "label": "Services Revenue",
+        "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "member_axis": [
+            "ServiceOtherMember"
+        ]
+    },
+    "cogs": {
+        "label": "Cost of Goods Sold",
+        "taxonomy_key": "CostOfGoodsAndServicesSold"
+    },
+    "cogs_products": {
+        "label": "Cost of Goods Sold (Products)",
+        "taxonomy_key": "CostOfGoodsAndServicesSold",
+        "member_axis": [
+            "ProductMember"
+        ]
+    },
+    "cogs_services": {
+        "label": "Cost of Goods Sold (Services)",
+        "taxonomy_key": "CostOfGoodsAndServicesSold",
+        "member_axis": [
+            "ServiceOtherMember"
+        ]
     },
     "gross_profit": {
         "label": "Gross Profit",
@@ -23,10 +51,18 @@
         "label": "SG&A Expense",
         "taxonomy_key": "SellingGeneralAndAdministrativeExpense"
     },
+    "sales_marketing_expense" : {
+        "label": "Sales & Marketing Expense",
+        "taxonomy_key": "SellingAndMarketingExpense"
+    },
+    "gna_expense": {
+        "label": "G&A Expense",
+        "taxonomy_key": "GeneralAndAdministrativeExpense"
+    },
     "operating_income": {
         "label": "Operating Income",
         "taxonomy_key": "OperatingIncomeLoss"
-    },
+    },    
     "net_income": {
         "label": "Net Income",
         "taxonomy_key": "NetIncomeLoss"
@@ -37,7 +73,7 @@
     },
     "interest_income": {
         "label": "Interest Income",
-        "taxonomy_key": "InvestmentIncomeInterest"
+        "taxonomy_key": "InvestmentIncomeNet"
     },
     "net_interest_expense": {
         "label": "Net Interest Expense",
@@ -49,15 +85,31 @@
     },
     "depreciation_amortization_expense": {
         "label": "Depreciation & Amortization Expense",
-        "taxonomy_key": "DepreciationDepletionAndAmortization"
+        "taxonomy_key": "DepreciationAmortizationAndOther"
     },
     "ebitda": {
         "label": "EBITDA",
-        "taxonomy_key": "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"
+        "taxonomy_key": "calc:{net_income-interest_expense+tax_expense+depreciation_amortization_expense}"
     },
     "ebitda_margin": {
         "label": "EBITDA Margin",
         "taxonomy_key": "calc:{(ebitda/revenue)*100}"
+    },
+    "adjusted_ebitda": {
+        "label": "Adjusted EBITDA",
+        "taxonomy_key": ""
+    },
+    "adjusted_ebitda_margin": {
+        "label": "Adjusted EBITDA Margin",
+        "taxonomy_key": ""
+    },
+    "eps_basic": {
+        "label": "Earnings Per Share, Basic",
+        "taxonomy_key": ""
+    },
+    "eps_diluted": {
+        "label": "Earnings Per Share, Diluted",
+        "taxonomy_key": ""
     },
     "net_cash_flow_from_operating_activities": {
         "label": "Net Cash Flow from Operating Activities",
@@ -65,7 +117,7 @@
     },
     "capex_tangible_assets": {
         "label": "Capital Expenditure on Tangible Assets",
-        "taxonomy_key": "PaymentsToAcquireProductiveAssets"
+        "taxonomy_key": "PaymentsToAcquirePropertyPlantAndEquipment"
     },
     "refunds_capex": {
         "label": "Refunds on Capital Expenditure on Tangible Assets",
@@ -73,7 +125,7 @@
     },
     "capex_intangible_assets": {
         "label": "Capital Expenditure on Intangible Assets",
-        "taxonomy_key": "calc:{0}"
+        "taxonomy_key": "AcquisitionsNetOfCashAcquiredAndPurchasesOfIntangibleAndOtherAssets"
     },
     "cash_flow_capex": {
         "label": "Cash Flow from Capital Expenditure",
@@ -89,11 +141,11 @@
     },
     "debt_long_term_current_portion": {
         "label": "Long Term Debt (Current)",
-        "taxonomy_key": "DebtCurrent"
+        "taxonomy_key": "LongTermDebtCurrent"
     },
     "debt_commercial_paper": {
         "label": "Commercial Paper",
-        "taxonomy_key": "CommercialPaper"
+        "taxonomy_key": ""
     },
     "debt_current": {
         "label": "Current Debt",

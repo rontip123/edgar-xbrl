@@ -6,30 +6,9 @@ from dateutil.relativedelta import relativedelta
 
 s3 = boto3.client('s3')
 
-taxonomy_mapping_tmpl = {
-    "ticker": {
-        "revenue" : {"label" : "Revenue", "taxonomy_key" : ""},
-        "net_income" : {"label" : "Net Income", "taxonomy_key" : ""},
-        "interest_expense" : {"label" : "Interest Expense", "taxonomy_key" : ""},
-        "interest_income": {"label" : "Interest Income", "taxonomy_key" : ""},
-        "net_interest_expense": {"label" : "Net Interest Expense", "taxonomy_key" : "calc:{interest_expense-interest_income}"},
-        "tax_expense": {"label" : "Tax Expense", "taxonomy_key" : ""},
-        "depreciation_amortization_expense": {"label" : "Depreciation & Amortization Expense", "taxonomy_key" : ""},
-        "ebitda": {"label" : "EBITDA", "taxonomy_key" : "calc:{net_income+interest_expense+tax_expense+depreciation_amortization_expense}"},
-        "ebitda_margin": {"label" : "EBITDA Margin", "taxonomy_key" : "calc:{(ebitda/revenue)*100}"},
-        "adjusted_ebitda": {"label" : "Adjusted EBITDA", "taxonomy_key" : ""},
-        "adjusted_ebitda_margin": {"label" : "Adjusted EBITDA Margin", "taxonomy_key" : ""},        
-        "debt_long_term": {"label" : "Long Term Debt (Non-Current)", "taxonomy_key" : ""},
-        "debt_long_term_current_portion" : {"label" : "Long Term Debt (Current)", "taxonomy_key" : ""},
-        "debt_commercial_paper" : {"label" : "Commercial Paper", "taxonomy_key" : ""},
-        #"debt_current_portion": {"label" : "Current Portion", "taxonomy_key" : ""},
-        "debt": {"label" : "Total Debt", "taxonomy_key" : "calc:debt_long_term+debt_long_term_current_portion"},
-    }
-}
+ticker = "wday"
 
-ticker = "vz"
-
-use_local_mapping = False
+use_local_mapping = True
 if (use_local_mapping): 
     #xbrl_keys = taxonomy_mapping[ticker]
     with open("./taxonomies/" + ticker.upper() + ".json", 'r') as file:
@@ -125,7 +104,7 @@ def do_it():
                         
                         #if (next_key == "debt_long_term"):
                             #print(next_key)
-                            
+
                         # check if item["dimension"] has values that match all the elements in member_axis
                         if member_axis is not None and not set(member_axis).issubset(set(item["dimensions"].values())):
                             continue
