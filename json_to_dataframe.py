@@ -123,8 +123,9 @@ def do_it():
                         dimension_period = item["dimensions"]["period"]
                         new_item = None
                         
-                        if (next_key == "debt_long_term"):
-                            print(next_key)
+                        #if (next_key == "debt_long_term"):
+                            #print(next_key)
+                            
                         # check if item["dimension"] has values that match all the elements in member_axis
                         if member_axis is not None and not set(member_axis).issubset(set(item["dimensions"].values())):
                             continue
