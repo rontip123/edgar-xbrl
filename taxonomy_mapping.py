@@ -24,7 +24,8 @@ with open(csv_file_path, mode='r', newline='') as csvfile:
             # Prepare the JSON object for the current fact
             fact_data = {
                 "label": row['label'] if row['label'] else "",
-                "taxonomy_key": process_taxonomy_key(row['taxonomy_key']) if row['taxonomy_key'] else ""
+                "taxonomy_key": process_taxonomy_key(row['taxonomy_key']) if row['taxonomy_key'] else "",
+                "calc": process_taxonomy_key(row['calc']) if row['calc'] else ""
             }
             
             # Process member_axis

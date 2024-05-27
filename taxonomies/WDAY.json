@@ -1,220 +1,274 @@
 {
     "revenue": {
-        "label": "Revenue (millions)",
+        "label": "Revenue ",
         "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "calc": "",
         "member_axis": []
     },
     "revenue_products": {
         "label": "Product Revenue (millions)",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "revenue_services": {
         "label": "Services Revenue (millions)",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "revenue_subscriptions": {
-        "label": "",
+        "label": "Subscription Revenue ",
         "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "calc": "",
         "member_axis": [
             "SubscriptionServicesMember"
         ]
     },
     "revenue_professional_services": {
-        "label": "",
+        "label": "Professional Services Revenue",
         "taxonomy_key": "RevenueFromContractWithCustomerExcludingAssessedTax",
+        "calc": "",
         "member_axis": [
             "ProfessionalServicesMember"
         ]
     },
-    "cogs": {
-        "label": "COGS (millions)",
-        "taxonomy_key": "",
-        "member_axis": []
-    },
     "cogs_products": {
-        "label": "Product (millions)",
+        "label": "Product ",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "cogs_services": {
-        "label": "Services (millions)",
+        "label": "Services",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "costs_subscriptions": {
-        "label": "Costs of Subscription Services (millions)",
+        "label": "Costs of Subscription Services ",
         "taxonomy_key": "CostOfGoodsAndServicesSold",
+        "calc": "",
         "member_axis": [
             "SubscriptionServicesMember"
         ]
     },
     "costs_professional_services": {
-        "label": "Costs of Professional Services (millions) ",
+        "label": "Costs of Professional Services",
         "taxonomy_key": "CostOfGoodsAndServicesSold",
+        "calc": "",
         "member_axis": [
             "ProfessionalServicesMember"
         ]
     },
+    "cogs": {
+        "label": "COGS",
+        "taxonomy_key": "",
+        "calc": "costs_subscriptions+cogs_services",
+        "member_axis": []
+    },
     "gross_profit": {
         "label": "Gross Profit (millions)",
         "taxonomy_key": "",
-        "member_axis": []
-    },
-    "operating_expense": {
-        "label": "Operating Expense (millions)",
-        "taxonomy_key": "",
+        "calc": "revenue-cogs",
         "member_axis": []
     },
     "rnd_expense": {
-        "label": "R&D Expense (millions)",
-        "taxonomy_key": "",
-        "member_axis": []
-    },
-    "sga_expense": {
-        "label": "SG&A Expense (millions)",
-        "taxonomy_key": "",
+        "label": "R&D Expense ",
+        "taxonomy_key": "ResearchAndDevelopmentExpense",
+        "calc": "",
         "member_axis": []
     },
     "sales_marketing_expense": {
-        "label": "Sales and Marketing Expense (millions)",
+        "label": "Sales and Marketing Expense",
         "taxonomy_key": "SellingAndMarketingExpense",
+        "calc": "",
         "member_axis": []
     },
     "gna_expense": {
-        "label": "G&A Expense (millions)",
+        "label": "G&A Expense",
         "taxonomy_key": "GeneralAndAdministrativeExpense",
+        "calc": "",
+        "member_axis": []
+    },
+    "sga_expense": {
+        "label": "SG&A Expense",
+        "taxonomy_key": "",
+        "calc": "sales_marketing_expense+gna_expense",
+        "member_axis": []
+    },
+    "operating_expense": {
+        "label": "Operating Expense",
+        "taxonomy_key": "OperatingExpenses",
+        "calc": "",
         "member_axis": []
     },
     "operating_income": {
-        "label": "Operating Income (millions)",
+        "label": "Operating Income",
         "taxonomy_key": "OperatingIncomeLoss",
+        "calc": "",
         "member_axis": []
     },
     "net_income": {
-        "label": "Net Income (millions)",
+        "label": "Net Income",
         "taxonomy_key": "NetIncomeLoss",
+        "calc": "",
         "member_axis": []
     },
     "interest_expense": {
-        "label": "Interest Expense (millions)",
+        "label": "Interest Expense",
         "taxonomy_key": "InterestExpenseDebt",
+        "calc": "",
         "member_axis": []
     },
     "interest_income": {
-        "label": "Interest Income (millions)",
+        "label": "Interest Income",
         "taxonomy_key": "InvestmentIncomeInterest",
+        "calc": "",
         "member_axis": []
     },
     "net_interest_expense": {
         "label": "Net Interest Expense",
         "taxonomy_key": "",
+        "calc": "interest_expense-interest_income",
         "member_axis": []
     },
     "tax_expense": {
-        "label": "Tax Expense (millions)",
+        "label": "Tax Expense",
         "taxonomy_key": "IncomeTaxExpenseBenefit",
+        "calc": "",
         "member_axis": []
     },
     "depreciation_amortization_expense": {
-        "label": "Depreciation & Amortization Expense (millions)",
+        "label": "Depreciation & Amortization Expense",
         "taxonomy_key": "OtherDepreciationAndAmortization",
+        "calc": "",
         "member_axis": []
     },
     "ebitda": {
-        "label": "EBITDA (millions)",
+        "label": "EBITDA",
         "taxonomy_key": "",
+        "calc": "net_income+net_interest_expense+tax_expense+depreciation_amortization_expense",
         "member_axis": []
     },
     "ebitda_margin": {
         "label": "EBITDA Margin",
         "taxonomy_key": "",
+        "calc": "ebitda/revenue",
         "member_axis": []
     },
     "adjusted_ebitda": {
-        "label": "Adjusted EBITDA reported by the company (millions)",
+        "label": "Adjusted EBITDA reported by the company",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "adjusted_ebitda_margin": {
         "label": "Adjusted EBITDA margin",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "eps_basic": {
         "label": "Earnings Per Share, Basic",
         "taxonomy_key": "EarningsPerShareBasic",
+        "calc": "",
         "member_axis": []
     },
     "eps_diluted": {
         "label": "Earnings Per Share, Diluted",
         "taxonomy_key": "EarningsPerShareDiluted",
+        "calc": "",
         "member_axis": []
     },
     "net_cash_flow_from_operating_activities": {
-        "label": "Net Cash Flow from Operating Activities (millions)",
+        "label": "Net Cash Flow from Operating Activities",
         "taxonomy_key": "NetCashProvidedByUsedInOperatingActivities",
+        "calc": "",
         "member_axis": []
     },
     "capex_tangible_assets": {
         "label": "Capital Expenditure On Tangible Assets",
         "taxonomy_key": "PaymentsToAcquireOtherProductiveAssets",
+        "calc": "",
         "member_axis": []
     },
     "refunds_capex": {
         "label": "Refunds on Capital Expenditure On Tangible Assets",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "capex_intangible_assets": {
-        "label": "Capital Expenditure On Intangible Assets",
+        "label": "CapEx On Intangible Assets",
         "taxonomy_key": "PaymentsToAcquireIntangibleAssets",
+        "calc": "",
+        "member_axis": []
+    },
+    "capex_acquisitions_netofcash": {
+        "label": "CapEx On Acquisitions Net Of Cash",
+        "taxonomy_key": "PaymentsToAcquireBusinessesNetOfCashAcquired",
+        "calc": "",
         "member_axis": []
     },
     "cash_flow_capex": {
-        "label": "",
-        "taxonomy_key": "PaymentsToAcquireBusinessesNetOfCashAcquired",
+        "label": "Cash Flow from Capital Expenditures",
+        "taxonomy_key": "",
+        "calc": "capex_tangible_assets+capex_intangible_assets+capex_acquisitions_netofcash",
         "member_axis": []
     },
     "free_cash_flow": {
-        "label": "Cash Flow from Capital Expenditures (millions)",
+        "label": "Free Cash Flow",
         "taxonomy_key": "",
+        "calc": "net_cash_flow_from_operating_activities-cash_flow_capex",
         "member_axis": []
     },
     "adjusted_free_cash_flow": {
-        "label": "Free Cash Flow (millions)",
+        "label": "Adjusted Free Cash Flow reported by the company (millions)",
         "taxonomy_key": "",
-        "member_axis": []
-    },
-    "debt": {
-        "label": "",
-        "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "debt_long_term": {
-        "label": "Debt",
-        "taxonomy_key": "",
-        "member_axis": []
-    },
-    "debt_long_term_current_protion": {
         "label": "Long-term (net of current portion)",
         "taxonomy_key": "LongTermDebtNoncurrent",
+        "calc": "",
+        "member_axis": []
+    },
+    "debt_long_term_current_portion": {
+        "label": "Current Portion of long-term",
+        "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "debt_long_term_current_portion_third_party": {
-        "label": "Current Portion of long-term",
+        "label": "Current Portion of long-term (3rd party)",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "debt_long_term_current_portion_affiliates": {
-        "label": "",
+        "label": "Current Portion of long-term (Affiliates)",
         "taxonomy_key": "",
+        "calc": "",
         "member_axis": []
     },
     "debt_commercial_paper": {
-        "label": "",
+        "label": "Commercial Paper",
         "taxonomy_key": "",
+        "calc": "",
+        "member_axis": []
+    },
+    "debt_current": {
+        "label": "Current portion (Maturing within one year)",
+        "taxonomy_key": "",
+        "calc": "debt_long_term_current_portion+debt_commercial_paper",
+        "member_axis": []
+    },
+    "debt": {
+        "label": "Debt",
+        "taxonomy_key": "",
+        "calc": "debt_long_term+debt_current",
         "member_axis": []
     }
 }
